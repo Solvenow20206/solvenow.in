@@ -12,11 +12,11 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%234f46e5'/><text x='16' y='22' font-family='system-ui' font-size='18' font-weight='700' fill='white' text-anchor='middle'>V</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1a1a2e; -webkit-font-smoothing: antialiased; line-height: 1.6; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1a1a2e; -webkit-font-smoothing: antialiased; line-height: 1.6; overflow-x: hidden; }
 
     :root {
       --navy: #0f172a;
@@ -25,6 +25,7 @@
       --indigo-dark: #3730a3;
       --indigo-light: #818cf8;
       --violet: #7c3aed;
+      --violet-light: #a78bfa;
       --slate-50: #f8fafc;
       --slate-100: #f1f5f9;
       --slate-200: #e2e8f0;
@@ -41,186 +42,534 @@
       --red-600: #dc2626;
       --green-50: #f0fdf4;
       --green-500: #22c55e;
+      --green-600: #16a34a;
       --amber-50: #fffbeb;
       --amber-600: #d97706;
       --amber-light: #fef3c7;
     }
 
-    /* Navbar */
-    .navbar { position: fixed; top: 0; width: 100%; background: rgba(255,255,255,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--slate-200); z-index: 100; }
-    .navbar-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+    /* ═══════════════════════════════════════
+       NAVBAR — Glass morphism
+    ═══════════════════════════════════════ */
+    .navbar {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(15, 23, 42, 0.0);
+      backdrop-filter: blur(0px);
+      border-bottom: 1px solid transparent;
+      transition: all 0.4s ease;
+    }
+    .navbar.scrolled {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .navbar-inner {
+      max-width: 1100px; margin: 0 auto; padding: 0 24px;
+      height: 68px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-left { display: flex; align-items: center; gap: 14px; }
     .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .logo-icon { width: 34px; height: 34px; background: var(--indigo); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 15px; }
-    .logo-text { font-size: 18px; font-weight: 700; color: var(--navy); }
-    .logo-sep { color: var(--slate-300); font-size: 18px; }
-    .logo-product { font-size: 14px; font-weight: 600; color: var(--indigo); }
+    .logo-icon {
+      width: 36px; height: 36px; background: var(--indigo); border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 700; font-size: 16px;
+      box-shadow: 0 0 20px rgba(79,70,229,0.4);
+    }
+    .logo-text { font-size: 19px; font-weight: 800; color: white; letter-spacing: -0.02em; }
+    .logo-sep { color: rgba(255,255,255,0.2); font-size: 20px; font-weight: 300; }
+    .logo-product { font-size: 14px; font-weight: 600; color: var(--indigo-light); }
     .nav-right { display: flex; align-items: center; gap: 16px; }
-    .nav-signin { font-size: 14px; color: var(--slate-600); text-decoration: none; font-weight: 500; transition: color 0.2s; }
-    .nav-signin:hover { color: var(--indigo); }
-    .nav-cta { display: inline-flex; align-items: center; background: var(--indigo); color: white; padding: 9px 20px; border-radius: 10px; font-size: 14px; font-weight: 600; text-decoration: none; transition: background 0.2s; }
-    .nav-cta:hover { background: var(--indigo-dark); }
+    .nav-signin {
+      font-size: 14px; color: rgba(255,255,255,0.7); text-decoration: none;
+      font-weight: 500; transition: color 0.2s;
+    }
+    .nav-signin:hover { color: white; }
+    .nav-cta {
+      display: inline-flex; align-items: center;
+      background: var(--indigo); color: white; padding: 9px 22px;
+      border-radius: 10px; font-size: 14px; font-weight: 600;
+      text-decoration: none; transition: all 0.3s;
+      box-shadow: 0 0 16px rgba(79,70,229,0.3);
+    }
+    .nav-cta:hover { background: var(--indigo-dark); transform: translateY(-1px); }
 
-    /* Hero */
-    .hero { padding: 140px 24px 80px; background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 50%, #f5f3ff 100%); position: relative; overflow: hidden; }
-    .hero::before { content: ''; position: absolute; top: -30%; right: -15%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(79,70,229,0.06) 0%, transparent 70%); border-radius: 50%; }
-    .hero-inner { max-width: 800px; margin: 0 auto; text-align: center; position: relative; z-index: 1; }
-    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: white; border: 1px solid var(--slate-200); color: var(--slate-700); font-size: 13px; font-weight: 600; padding: 6px 16px; border-radius: 100px; margin-bottom: 28px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
-    .hero-badge-dot { width: 7px; height: 7px; background: var(--green-500); border-radius: 50%; }
-    .hero h1 { font-size: clamp(36px, 5vw, 58px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 24px; color: var(--navy); }
-    .hero h1 span { background: linear-gradient(135deg, var(--indigo), var(--violet)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .hero p { font-size: 18px; color: var(--slate-500); max-width: 600px; margin: 0 auto 40px; line-height: 1.7; }
+    /* ═══════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════ */
+    .hero {
+      position: relative; min-height: 100vh; display: flex; align-items: center;
+      justify-content: center; overflow: hidden; padding: 120px 24px 80px;
+      background: linear-gradient(-45deg, #0f172a, #1e1b4e, #312e81, #1e1b4e, #0f172a);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+    }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .hero-shapes { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .shape {
+      position: absolute; border-radius: 50%; opacity: 0.07;
+      animation: floatShape 20s ease-in-out infinite;
+    }
+    .shape-1 { width: 450px; height: 450px; background: var(--indigo-light); top: -12%; right: -8%; animation-duration: 22s; }
+    .shape-2 { width: 350px; height: 350px; background: var(--violet); bottom: -10%; left: -8%; animation-delay: -5s; animation-duration: 18s; }
+    .shape-3 { width: 200px; height: 200px; background: #60a5fa; top: 35%; left: 8%; animation-delay: -10s; animation-duration: 25s; }
+    .shape-4 { width: 160px; height: 160px; background: var(--violet-light); top: 15%; right: 12%; animation-delay: -7s; animation-duration: 20s; border-radius: 30%; }
+    @keyframes floatShape {
+      0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+      25% { transform: translate(30px, -40px) rotate(5deg) scale(1.05); }
+      50% { transform: translate(-20px, 20px) rotate(-3deg) scale(0.95); }
+      75% { transform: translate(15px, 35px) rotate(7deg) scale(1.02); }
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 20%, transparent 70%);
+    }
+    .hero-inner { max-width: 800px; text-align: center; position: relative; z-index: 2; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.9); font-size: 13px; font-weight: 600;
+      padding: 8px 20px; border-radius: 100px; margin-bottom: 32px;
+      backdrop-filter: blur(8px);
+    }
+    .hero-badge-dot {
+      width: 7px; height: 7px; background: #34d399; border-radius: 50%;
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(52,211,153,0.5); }
+      50% { box-shadow: 0 0 0 6px rgba(52,211,153,0); }
+    }
+    .hero h1 {
+      font-size: clamp(38px, 5.5vw, 64px); font-weight: 900;
+      letter-spacing: -0.04em; line-height: 1.1; margin-bottom: 28px; color: white;
+    }
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--indigo-light), var(--violet-light), #60a5fa);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero p {
+      font-size: 19px; color: rgba(255,255,255,0.5); max-width: 600px;
+      margin: 0 auto 44px; line-height: 1.75;
+    }
     .hero-buttons { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; }
-    .btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--indigo); color: white; padding: 14px 32px; border-radius: 12px; font-size: 15px; font-weight: 600; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 16px rgba(79,70,229,0.3); }
-    .btn-primary:hover { background: var(--indigo-dark); box-shadow: 0 6px 24px rgba(79,70,229,0.4); transform: translateY(-1px); }
-    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: white; color: var(--slate-700); padding: 14px 32px; border-radius: 12px; font-size: 15px; font-weight: 600; text-decoration: none; transition: all 0.2s; border: 1px solid var(--slate-200); }
-    .btn-secondary:hover { border-color: var(--indigo); color: var(--indigo); }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--indigo); color: white; padding: 16px 36px;
+      border-radius: 14px; font-size: 16px; font-weight: 700;
+      text-decoration: none; transition: all 0.3s;
+      box-shadow: 0 0 30px rgba(79,70,229,0.4), 0 4px 16px rgba(0,0,0,0.2);
+      position: relative; overflow: hidden;
+    }
+    .btn-primary::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
+      transform: translateX(-100%); transition: transform 0.6s;
+    }
+    .btn-primary:hover::before { transform: translateX(100%); }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 40px rgba(79,70,229,0.6), 0 8px 24px rgba(0,0,0,0.3);
+    }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: transparent; color: rgba(255,255,255,0.8); padding: 16px 36px;
+      border-radius: 14px; font-size: 16px; font-weight: 600;
+      text-decoration: none; transition: all 0.3s;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .btn-secondary:hover {
+      color: white; border-color: rgba(255,255,255,0.35);
+      background: rgba(255,255,255,0.05); transform: translateY(-2px);
+    }
+    .scroll-indicator {
+      position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      color: rgba(255,255,255,0.3); font-size: 11px; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .scroll-arrow {
+      width: 24px; height: 24px; border-right: 2px solid rgba(255,255,255,0.3);
+      border-bottom: 2px solid rgba(255,255,255,0.3); transform: rotate(45deg);
+      animation: scrollBounce 2s ease-in-out infinite;
+    }
+    @keyframes scrollBounce {
+      0%, 100% { transform: rotate(45deg) translate(0, 0); opacity: 0.3; }
+      50% { transform: rotate(45deg) translate(5px, 5px); opacity: 0.8; }
+    }
 
-    /* Crisis section */
-    .crisis { padding: 80px 24px; background: white; }
-    .crisis-inner { max-width: 900px; margin: 0 auto; }
-    .crisis-header { text-align: center; margin-bottom: 48px; }
-    .crisis-header h2 { font-size: clamp(26px, 3.5vw, 36px); font-weight: 800; color: var(--navy); letter-spacing: -0.02em; margin-bottom: 12px; }
-    .crisis-header p { font-size: 16px; color: var(--slate-500); max-width: 600px; margin: 0 auto; }
-    .crisis-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 48px; }
-    .stat-card { background: var(--red-50); border: 1px solid #fecaca; border-radius: 16px; padding: 28px; text-align: center; }
-    .stat-number { font-size: clamp(28px, 3.5vw, 40px); font-weight: 800; color: var(--red-600); letter-spacing: -0.02em; }
-    .stat-label { font-size: 14px; font-weight: 600; color: var(--navy); margin-top: 4px; margin-bottom: 6px; }
-    .stat-desc { font-size: 12px; color: var(--slate-500); line-height: 1.6; }
-    .stat-source { display: inline-block; font-size: 11px; color: var(--indigo); text-decoration: none; margin-top: 8px; border-bottom: 1px dashed var(--indigo); }
+    /* ═══════════════════════════════════════
+       SCROLL REVEAL
+    ═══════════════════════════════════════ */
+    .reveal { opacity: 0; transform: translateY(40px); transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-left { opacity: 0; transform: translateX(-50px); transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+    .reveal-right { opacity: 0; transform: translateX(50px); transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+    .reveal-scale { opacity: 0; transform: scale(0.85); transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+    .reveal-scale.visible { opacity: 1; transform: scale(1); }
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.3s; }
+    .delay-4 { transition-delay: 0.4s; }
+
+    /* ═══════════════════════════════════════
+       SECTION HEADERS
+    ═══════════════════════════════════════ */
+    .section-header { text-align: center; margin-bottom: 56px; }
+    .section-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12px; font-weight: 700; color: var(--indigo);
+      text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 16px;
+    }
+    .section-label-dot { width: 6px; height: 6px; background: var(--indigo); border-radius: 50%; }
+    .section-label-red { color: var(--red-500); }
+    .section-label-red .section-label-dot { background: var(--red-500); }
+    .section-header h2 {
+      font-size: clamp(28px, 4vw, 42px); font-weight: 900;
+      letter-spacing: -0.03em; color: var(--navy); margin-bottom: 14px; line-height: 1.15;
+    }
+    .section-header p { font-size: 17px; color: var(--slate-500); max-width: 600px; margin: 0 auto; line-height: 1.7; }
+
+    /* ═══════════════════════════════════════
+       CRISIS STATS
+    ═══════════════════════════════════════ */
+    .crisis {
+      padding: 100px 24px; background: white; position: relative;
+    }
+    .crisis::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 120px;
+      background: linear-gradient(to bottom, var(--navy), white);
+    }
+    .crisis-inner { max-width: 950px; margin: 0 auto; position: relative; z-index: 1; }
+    .crisis-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 56px; }
+    .stat-card {
+      background: var(--red-50); border: 1px solid #fecaca; border-radius: 20px;
+      padding: 32px; text-align: center; position: relative; overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(239,68,68,0.1);
+    }
+    .stat-card::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--red-400), var(--red-600));
+      transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
+    }
+    .stat-card:hover::after { transform: scaleX(1); }
+    .stat-number {
+      font-size: clamp(28px, 3.5vw, 42px); font-weight: 900;
+      color: var(--red-600); letter-spacing: -0.03em;
+    }
+    .stat-label { font-size: 15px; font-weight: 700; color: var(--navy); margin-top: 4px; margin-bottom: 8px; }
+    .stat-desc { font-size: 13px; color: var(--slate-500); line-height: 1.6; }
+    .stat-source {
+      display: inline-block; font-size: 11px; color: var(--indigo); text-decoration: none;
+      margin-top: 10px; border-bottom: 1px dashed var(--indigo); transition: color 0.2s;
+    }
     .stat-source:hover { color: var(--indigo-dark); }
 
-    /* Unclaimed breakdown */
-    .breakdown { background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: 20px; padding: 36px; }
-    .breakdown h3 { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
-    .breakdown > p { font-size: 14px; color: var(--slate-500); margin-bottom: 24px; }
-    .breakdown-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 20px; }
-    .breakdown-item { display: flex; justify-content: space-between; align-items: center; background: white; border: 1px solid var(--slate-200); border-radius: 12px; padding: 16px 20px; }
+    /* Breakdown box */
+    .breakdown {
+      background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: 24px;
+      padding: 40px; overflow: hidden;
+    }
+    .breakdown h3 { font-size: 20px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+    .breakdown > p { font-size: 14px; color: var(--slate-500); margin-bottom: 28px; }
+    .breakdown-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 20px; }
+    .breakdown-item {
+      display: flex; justify-content: space-between; align-items: center;
+      background: white; border: 1px solid var(--slate-200); border-radius: 14px;
+      padding: 18px 22px; transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .breakdown-item:hover {
+      transform: translateX(4px);
+      box-shadow: -4px 0 0 var(--red-500), 0 4px 16px rgba(0,0,0,0.04);
+    }
     .breakdown-item-label { font-size: 14px; color: var(--slate-700); font-weight: 500; }
-    .breakdown-item-value { font-size: 16px; font-weight: 700; color: var(--red-500); }
-    .breakdown-footer { display: flex; align-items: center; justify-content: space-between; background: var(--navy); border-radius: 12px; padding: 18px 24px; }
+    .breakdown-item-value { font-size: 16px; font-weight: 800; color: var(--red-500); }
+    .breakdown-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--navy); border-radius: 14px; padding: 20px 28px;
+    }
     .breakdown-footer-label { font-size: 14px; font-weight: 600; color: var(--slate-400); }
-    .breakdown-footer-value { font-size: 22px; font-weight: 800; color: white; }
-    .breakdown-source { text-align: center; margin-top: 16px; font-size: 12px; color: var(--slate-400); }
+    .breakdown-footer-value { font-size: 24px; font-weight: 900; color: white; }
+    .breakdown-source { text-align: center; margin-top: 18px; font-size: 12px; color: var(--slate-400); }
     .breakdown-source a { color: var(--indigo); text-decoration: none; border-bottom: 1px dashed var(--indigo); }
 
-    /* Real stories */
-    .stories { padding: 80px 24px; background: var(--slate-50); }
-    .stories-inner { max-width: 900px; margin: 0 auto; }
-    .stories h2 { font-size: clamp(26px, 3.5vw, 36px); font-weight: 800; color: var(--navy); letter-spacing: -0.02em; text-align: center; margin-bottom: 12px; }
-    .stories > .subtitle { font-size: 16px; color: var(--slate-500); text-align: center; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto; }
+    /* ═══════════════════════════════════════
+       REAL STORIES
+    ═══════════════════════════════════════ */
+    .stories { padding: 100px 24px; background: var(--slate-50); }
+    .stories-inner { max-width: 950px; margin: 0 auto; }
     .story-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
-    .story-card { background: white; border: 1px solid var(--slate-200); border-radius: 16px; padding: 28px; }
-    .story-card .emoji { font-size: 28px; margin-bottom: 14px; }
-    .story-card h3 { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
-    .story-card p { font-size: 13px; color: var(--slate-500); line-height: 1.7; }
+    .story-card {
+      background: white; border: 1px solid var(--slate-200); border-radius: 20px;
+      padding: 32px; transition: transform 0.3s, box-shadow 0.3s; position: relative;
+      overflow: hidden;
+    }
+    .story-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 50px rgba(15,23,42,0.08);
+    }
+    .story-card::before {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--red-400), var(--amber-600));
+      transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
+    }
+    .story-card:hover::before { transform: scaleX(1); }
+    .story-emoji {
+      width: 56px; height: 56px; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; margin-bottom: 18px;
+      background: linear-gradient(135deg, var(--red-50), #fff1f2);
+    }
+    .story-card h3 { font-size: 17px; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
+    .story-card p { font-size: 14px; color: var(--slate-500); line-height: 1.75; }
     .story-card .highlight { color: var(--red-500); font-weight: 600; }
 
-    /* Solution section */
-    .solution { padding: 80px 24px; background: white; }
-    .solution-inner { max-width: 900px; margin: 0 auto; }
-    .solution-header { text-align: center; margin-bottom: 48px; }
-    .solution-header h2 { font-size: clamp(26px, 3.5vw, 36px); font-weight: 800; color: var(--navy); letter-spacing: -0.02em; margin-bottom: 12px; }
-    .solution-header p { font-size: 16px; color: var(--slate-500); max-width: 600px; margin: 0 auto; }
-    .solution-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-    .solution-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 48px; }
-    .compare-card { border-radius: 16px; padding: 28px; }
+    /* ═══════════════════════════════════════
+       SOLUTION COMPARE
+    ═══════════════════════════════════════ */
+    .solution { padding: 100px 24px; background: white; }
+    .solution-inner { max-width: 950px; margin: 0 auto; }
+    .solution-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .compare-card { border-radius: 20px; padding: 36px; transition: transform 0.3s; }
+    .compare-card:hover { transform: translateY(-4px); }
     .compare-without { background: var(--red-50); border: 1px solid #fecaca; }
     .compare-with { background: var(--green-50); border: 1px solid #bbf7d0; }
-    .compare-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .compare-card h3 { font-size: 16px; font-weight: 800; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
     .compare-without h3 { color: var(--red-600); }
-    .compare-with h3 { color: #16a34a; }
-    .compare-card ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .compare-card li { font-size: 13px; display: flex; gap: 8px; line-height: 1.6; }
-    .compare-without li { color: var(--slate-600); }
-    .compare-with li { color: var(--slate-600); }
-    .x-mark { color: var(--red-400); flex-shrink: 0; margin-top: 2px; }
-    .check-mark { color: var(--green-500); flex-shrink: 0; margin-top: 2px; }
+    .compare-with h3 { color: var(--green-600); }
+    .compare-card ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .compare-card li { font-size: 14px; display: flex; gap: 10px; line-height: 1.65; color: var(--slate-600); }
+    .x-mark { color: var(--red-400); flex-shrink: 0; margin-top: 2px; font-weight: 700; }
+    .check-mark { color: var(--green-500); flex-shrink: 0; margin-top: 2px; font-weight: 700; }
 
-    /* Features */
-    .features { padding: 80px 24px; background: var(--slate-50); }
-    .features-inner { max-width: 1000px; margin: 0 auto; }
-    .section-header { text-align: center; margin-bottom: 48px; }
-    .section-header h2 { font-size: clamp(26px, 3.5vw, 36px); font-weight: 800; color: var(--navy); letter-spacing: -0.02em; margin-bottom: 12px; }
-    .section-header p { font-size: 16px; color: var(--slate-500); }
+    /* ═══════════════════════════════════════
+       FEATURES — 4-column grid
+    ═══════════════════════════════════════ */
+    .features { padding: 100px 24px; background: var(--slate-50); }
+    .features-inner { max-width: 1050px; margin: 0 auto; }
     .features-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-    .feature-card { background: white; border: 1px solid var(--slate-200); border-radius: 16px; padding: 28px; transition: transform 0.2s, box-shadow 0.2s; }
-    .feature-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(15,23,42,0.06); }
-    .feature-icon { width: 44px; height: 44px; background: #eef2ff; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
-    .feature-icon svg { width: 22px; height: 22px; color: var(--indigo); }
+    .feature-card-wrap { perspective: 600px; }
+    .feature-card {
+      background: white; border: 1px solid var(--slate-200); border-radius: 20px;
+      padding: 30px; transition: transform 0.4s, box-shadow 0.4s;
+      height: 100%; transform-style: preserve-3d;
+    }
+    .feature-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(15,23,42,0.08), 0 0 0 1px rgba(79,70,229,0.08);
+    }
+    .feature-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center; margin-bottom: 18px;
+      background: linear-gradient(135deg, #eef2ff, #ede9fe);
+      transition: transform 0.3s;
+    }
+    .feature-card:hover .feature-icon { transform: scale(1.1) rotate(-5deg); }
+    .feature-icon svg { width: 24px; height: 24px; color: var(--indigo); }
     .feature-card h3 { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
     .feature-card p { font-size: 13px; color: var(--slate-500); line-height: 1.7; }
 
-    /* How it works */
-    .how-it-works { padding: 80px 24px; background: white; }
-    .how-inner { max-width: 900px; margin: 0 auto; }
-    .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
-    .step { text-align: center; }
-    .step-num { width: 56px; height: 56px; background: var(--indigo); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; color: white; font-size: 22px; font-weight: 700; }
-    .step h3 { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
-    .step p { font-size: 14px; color: var(--slate-500); line-height: 1.7; }
+    /* ═══════════════════════════════════════
+       HOW IT WORKS — Timeline
+    ═══════════════════════════════════════ */
+    .how-it-works { padding: 100px 24px; background: white; }
+    .how-inner { max-width: 700px; margin: 0 auto; }
+    .timeline {
+      position: relative; padding-left: 60px;
+      display: flex; flex-direction: column; gap: 48px;
+    }
+    .timeline::before {
+      content: ''; position: absolute; left: 22px; top: 0; bottom: 0; width: 2px;
+      background: var(--slate-200);
+    }
+    .timeline-line-fill {
+      position: absolute; left: 22px; top: 0; width: 2px; height: 0;
+      background: linear-gradient(to bottom, var(--indigo), var(--violet));
+      transition: height 0.8s ease;
+    }
+    .timeline-step { position: relative; }
+    .timeline-num {
+      position: absolute; left: -60px; top: 0;
+      width: 44px; height: 44px; border-radius: 14px;
+      background: white; border: 2px solid var(--slate-200);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 800; color: var(--slate-400);
+      transition: all 0.5s; z-index: 2;
+    }
+    .timeline-step.active .timeline-num {
+      background: var(--indigo); border-color: var(--indigo);
+      color: white; transform: scale(1.15);
+      box-shadow: 0 0 20px rgba(79,70,229,0.4);
+    }
+    .timeline-step h3 { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .timeline-step p { font-size: 15px; color: var(--slate-500); line-height: 1.7; }
 
-    /* Security */
-    .security { padding: 64px 24px; background: var(--slate-50); }
+    /* ═══════════════════════════════════════
+       SECURITY
+    ═══════════════════════════════════════ */
+    .security { padding: 80px 24px; background: var(--slate-50); }
     .security-inner { max-width: 900px; margin: 0 auto; }
     .security-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
-    .security-item { text-align: center; }
-    .security-item .icon { font-size: 28px; margin-bottom: 10px; }
-    .security-item h3 { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .security-item {
+      text-align: center; padding: 28px; border-radius: 16px;
+      transition: transform 0.3s, background 0.3s;
+    }
+    .security-item:hover { transform: translateY(-4px); background: white; }
+    .security-icon {
+      width: 56px; height: 56px; border-radius: 16px; margin: 0 auto 14px;
+      display: flex; align-items: center; justify-content: center; font-size: 26px;
+      background: linear-gradient(135deg, #eef2ff, #ede9fe);
+      transition: transform 0.3s;
+    }
+    .security-item:hover .security-icon { transform: scale(1.1); }
+    .security-item h3 { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
     .security-item p { font-size: 13px; color: var(--slate-500); line-height: 1.6; }
 
-    /* Pricing */
-    .pricing { padding: 80px 24px; background: white; }
-    .pricing-inner { max-width: 700px; margin: 0 auto; }
+    /* ═══════════════════════════════════════
+       PRICING
+    ═══════════════════════════════════════ */
+    .pricing { padding: 100px 24px; background: white; }
+    .pricing-inner { max-width: 720px; margin: 0 auto; }
     .pricing-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
-    .price-card { border-radius: 20px; padding: 32px; }
-    .price-free { background: white; border: 1px solid var(--slate-200); }
-    .price-premium { background: var(--indigo); color: white; position: relative; }
-    .price-badge { position: absolute; top: 16px; right: 16px; font-size: 11px; background: rgba(255,255,255,0.2); color: white; padding: 4px 12px; border-radius: 100px; font-weight: 600; }
-    .price-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+    .price-card-wrap { perspective: 600px; }
+    .price-card {
+      border-radius: 24px; padding: 36px; height: 100%;
+      transition: transform 0.4s, box-shadow 0.4s;
+    }
+    .price-card:hover { transform: translateY(-6px); }
+    .price-free {
+      background: white; border: 1px solid var(--slate-200);
+    }
+    .price-free:hover { box-shadow: 0 20px 50px rgba(15,23,42,0.08); }
+    .price-premium {
+      background: linear-gradient(135deg, var(--indigo), var(--violet));
+      color: white; position: relative; overflow: hidden;
+    }
+    .price-premium::before {
+      content: ''; position: absolute; top: -50%; right: -50%; width: 200%; height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%);
+      animation: floatShape 15s ease-in-out infinite;
+    }
+    .price-premium:hover { box-shadow: 0 20px 50px rgba(79,70,229,0.3); }
+    .price-badge {
+      position: absolute; top: 18px; right: 18px; font-size: 11px;
+      background: rgba(255,255,255,0.2); color: white; padding: 4px 14px;
+      border-radius: 100px; font-weight: 600; z-index: 1;
+    }
+    .price-card h3 { font-size: 18px; font-weight: 800; margin-bottom: 4px; position: relative; }
     .price-free h3 { color: var(--navy); }
-    .price-amount { font-size: 32px; font-weight: 800; margin-bottom: 2px; }
+    .price-amount { font-size: 36px; font-weight: 900; margin-bottom: 2px; position: relative; }
     .price-free .price-amount { color: var(--navy); }
-    .price-period { font-size: 12px; margin-bottom: 24px; }
+    .price-period { font-size: 13px; margin-bottom: 28px; position: relative; }
     .price-free .price-period { color: var(--slate-400); }
     .price-premium .price-period { opacity: 0.8; }
-    .price-card ul { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
-    .price-card li { font-size: 14px; display: flex; gap: 8px; }
+    .price-card ul {
+      list-style: none; display: flex; flex-direction: column;
+      gap: 12px; margin-bottom: 32px; position: relative;
+    }
+    .price-card li { font-size: 14px; display: flex; gap: 10px; line-height: 1.5; }
     .price-free li { color: var(--slate-600); }
     .price-premium li { color: rgba(255,255,255,0.9); }
-    .price-btn-outline { display: block; text-align: center; background: var(--slate-100); color: var(--slate-700); padding: 13px; border-radius: 12px; font-size: 14px; font-weight: 600; text-decoration: none; transition: background 0.2s; }
+    .price-check { flex-shrink: 0; }
+    .price-btn-outline {
+      display: block; text-align: center; background: var(--slate-100);
+      color: var(--slate-700); padding: 14px; border-radius: 12px;
+      font-size: 14px; font-weight: 600; text-decoration: none;
+      transition: all 0.2s; position: relative;
+    }
     .price-btn-outline:hover { background: var(--slate-200); }
-    .price-btn-white { display: block; text-align: center; background: white; color: var(--indigo); padding: 13px; border-radius: 12px; font-size: 14px; font-weight: 600; text-decoration: none; transition: background 0.2s; }
+    .price-btn-white {
+      display: block; text-align: center; background: white;
+      color: var(--indigo); padding: 14px; border-radius: 12px;
+      font-size: 14px; font-weight: 600; text-decoration: none;
+      transition: all 0.2s; position: relative;
+    }
     .price-btn-white:hover { background: #eef2ff; }
 
-    /* CTA */
-    .cta { padding: 80px 24px; background: linear-gradient(135deg, var(--navy) 0%, #1e1b4e 100%); text-align: center; }
-    .cta-inner { max-width: 600px; margin: 0 auto; }
-    .cta h2 { font-size: clamp(26px, 3.5vw, 36px); font-weight: 800; color: white; margin-bottom: 14px; letter-spacing: -0.02em; }
-    .cta p { font-size: 16px; color: var(--slate-400); margin-bottom: 36px; line-height: 1.7; }
-    .btn-white { display: inline-flex; align-items: center; gap: 8px; background: white; color: var(--navy); padding: 14px 32px; border-radius: 12px; font-size: 15px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
-    .btn-white:hover { background: var(--slate-100); transform: translateY(-1px); }
+    /* ═══════════════════════════════════════
+       CTA
+    ═══════════════════════════════════════ */
+    .cta {
+      padding: 100px 24px; text-align: center; position: relative; overflow: hidden;
+      background: linear-gradient(-45deg, #0f172a, #1e1b4e, #312e81, #1e1b4e);
+      background-size: 400% 400%;
+      animation: gradientShift 12s ease infinite;
+    }
+    .cta-particles { position: absolute; inset: 0; pointer-events: none; }
+    .particle {
+      position: absolute; width: 4px; height: 4px;
+      background: rgba(255,255,255,0.2); border-radius: 50%;
+      animation: floatParticle linear infinite;
+    }
+    @keyframes floatParticle {
+      from { transform: translateY(100vh) scale(0); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      to { transform: translateY(-20vh) scale(1); opacity: 0; }
+    }
+    .cta-inner { max-width: 600px; margin: 0 auto; position: relative; z-index: 1; }
+    .cta h2 {
+      font-size: clamp(28px, 4vw, 42px); font-weight: 900; color: white;
+      margin-bottom: 16px; letter-spacing: -0.03em; line-height: 1.15;
+    }
+    .cta p { font-size: 17px; color: var(--slate-400); margin-bottom: 40px; line-height: 1.7; }
+    .btn-cta-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: white; color: var(--navy); padding: 16px 36px;
+      border-radius: 14px; font-size: 16px; font-weight: 700;
+      text-decoration: none; transition: all 0.3s;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .btn-cta-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.3); background: var(--slate-100); }
 
-    /* Footer */
-    .footer { background: var(--navy); color: var(--slate-400); padding: 56px 24px 36px; }
+    /* ═══════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════ */
+    .footer { background: var(--navy); color: var(--slate-400); padding: 64px 24px 40px; }
     .footer-inner { max-width: 1000px; margin: 0 auto; }
-    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
-    .footer-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-    .footer-brand span { font-size: 16px; font-weight: 700; color: white; }
-    .footer p { font-size: 13px; line-height: 1.7; }
-    .footer h4 { font-size: 13px; font-weight: 600; color: white; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.05em; }
-    .footer ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .footer ul a { font-size: 13px; color: var(--slate-400); text-decoration: none; transition: color 0.2s; }
-    .footer ul a:hover { color: white; }
-    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px; text-align: center; font-size: 12px; color: var(--slate-600); }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+    .footer-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .footer-brand .logo-icon { box-shadow: none; }
+    .footer-brand span { font-size: 17px; font-weight: 800; color: white; }
+    .footer p { font-size: 14px; line-height: 1.7; }
+    .footer h4 {
+      font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.5);
+      margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.1em;
+    }
+    .footer ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .footer ul a {
+      font-size: 14px; color: var(--slate-400); text-decoration: none;
+      transition: color 0.2s, padding-left 0.2s; display: inline-block;
+    }
+    .footer ul a:hover { color: white; padding-left: 4px; }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.06); padding-top: 28px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 13px; color: var(--slate-600);
+    }
+    .footer-heart { color: #ef4444; display: inline-block; animation: heartbeat 1.5s ease-in-out infinite; }
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      15% { transform: scale(1.2); }
+      30% { transform: scale(1); }
+    }
 
-    /* Animation */
-    @keyframes fade-up { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
-    .anim { animation: fade-up 0.6s ease-out forwards; }
-    .anim-d1 { animation-delay: 0.1s; opacity: 0; }
-    .anim-d2 { animation-delay: 0.2s; opacity: 0; }
-    .anim-d3 { animation-delay: 0.3s; opacity: 0; }
-
-    /* Mobile */
+    /* ═══════════════════════════════════════
+       MOBILE
+    ═══════════════════════════════════════ */
     @media (max-width: 768px) {
       .crisis-stats { grid-template-columns: 1fr; }
       .breakdown-grid { grid-template-columns: 1fr; }
@@ -230,22 +579,28 @@
       .steps-grid { grid-template-columns: 1fr; }
       .security-grid { grid-template-columns: 1fr; }
       .pricing-grid { grid-template-columns: 1fr; }
-      .about-grid { grid-template-columns: 1fr; }
-      .footer-grid { grid-template-columns: 1fr; gap: 28px; }
-      .hero { padding: 120px 20px 60px; }
+      .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+      .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+      .hero { padding: 120px 20px 80px; min-height: auto; }
+      .hero h1 { font-size: 36px; }
       .nav-signin { display: none; }
+      .scroll-indicator { display: none; }
+      .timeline { padding-left: 50px; }
+      .timeline-num { left: -50px; width: 38px; height: 38px; font-size: 14px; }
+      .timeline::before, .timeline-line-fill { left: 18px; }
     }
     @media (max-width: 480px) {
       .features-grid { grid-template-columns: 1fr; }
+      .hero-buttons { flex-direction: column; align-items: center; }
     }
   </style>
 </head>
 <body>
 
   <!-- Navbar -->
-  <nav class="navbar">
+  <nav class="navbar" id="navbar">
     <div class="navbar-inner">
-      <div style="display:flex;align-items:center;gap:14px">
+      <div class="nav-left">
         <a href="/" class="logo">
           <div class="logo-icon">S</div>
           <span class="logo-text">SolveNow</span>
@@ -262,49 +617,61 @@
 
   <!-- Hero -->
   <section class="hero">
+    <div class="hero-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+      <div class="shape shape-4"></div>
+    </div>
     <div class="hero-inner">
-      <div class="anim">
-        <div class="hero-badge">
-          <span class="hero-badge-dot"></span>
-          Live &amp; Free to Use
-        </div>
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        Live &amp; Free to Use
       </div>
-      <h1 class="anim anim-d1">Never leave your family<br><span>in the dark</span></h1>
-      <p class="anim anim-d2">
+      <h1>Never leave your family<br><span>in the dark</span></h1>
+      <p>
         In most Indian families, one person holds all the financial knowledge.
         Virasat ensures that if anything happens to you, your loved ones know
         exactly what exists, where it is, and what to do.
       </p>
-      <div class="hero-buttons anim anim-d3">
+      <div class="hero-buttons">
         <a href="https://virasat.solvenow.in/register" class="btn-primary">Create Free Account</a>
         <a href="#features" class="btn-secondary">See How It Works</a>
       </div>
     </div>
+    <div class="scroll-indicator">
+      <span>Scroll</span>
+      <div class="scroll-arrow"></div>
+    </div>
   </section>
 
-  <!-- The Crisis: Real Statistics -->
+  <!-- Crisis Stats -->
   <section class="crisis">
     <div class="crisis-inner">
-      <div class="crisis-header">
-        <h2>India's Hidden Financial Crisis</h2>
-        <p>Every year, billions of rupees go unclaimed because families don't know what their loved ones owned. These aren't hypothetical numbers — they're from RBI, IRDAI, and SEBI reports.</p>
+      <div class="section-header reveal">
+        <div class="section-label section-label-red">
+          <span class="section-label-dot"></span>
+          The Crisis
+        </div>
+        <h2>India's hidden financial crisis</h2>
+        <p>Every year, billions of rupees go unclaimed because families don't know what their loved ones owned. These are real numbers from RBI, IRDAI, and SEBI.</p>
       </div>
 
       <div class="crisis-stats">
-        <div class="stat-card">
-          <div class="stat-number">&#8377;1.84L Cr</div>
+        <div class="stat-card reveal delay-1">
+          <div class="stat-number" data-counter data-target="184" data-prefix="&#8377;" data-suffix="L Cr">&#8377;0</div>
           <div class="stat-label">Total Unclaimed Assets</div>
           <div class="stat-desc">Across banks, insurance, shares, mutual funds, and provident funds — lying unclaimed in India.</div>
           <a href="https://www.business-standard.com/finance/news/fm-sitharaman-unclaimed-financial-assets-rs-1-84-trillion-apki-poonji-campaign-125100400509_1.html" target="_blank" rel="noopener" class="stat-source">Source: Finance Minister, Oct 2025</a>
         </div>
-        <div class="stat-card">
-          <div class="stat-number">&#8377;78,213 Cr</div>
+        <div class="stat-card reveal delay-2">
+          <div class="stat-number" data-counter data-target="78213" data-prefix="&#8377;" data-suffix=" Cr">&#8377;0</div>
           <div class="stat-label">Unclaimed Bank Deposits</div>
           <div class="stat-desc">Savings accounts, FDs, and current accounts not claimed for 10+ years. Growing 26% year-on-year.</div>
           <a href="https://www.business-standard.com/finance/news/unclaimed-deposits-with-banks-rise-26-to-rs-78-213-crore-rbi-report-124053000742_1.html" target="_blank" rel="noopener" class="stat-source">Source: RBI Annual Report, March 2024</a>
         </div>
-        <div class="stat-card">
-          <div class="stat-number">15 Lakh+</div>
+        <div class="stat-card reveal delay-3">
+          <div class="stat-number" data-counter data-target="15" data-suffix=" Lakh+">0</div>
           <div class="stat-label">Succession Cases Pending</div>
           <div class="stat-desc">Inheritance disputes clogging Indian courts. 60% of probate applications take over a year to resolve.</div>
           <a href="https://doonlawmentor.com/succession-disputes-in-india-key-legal-issues-and-resolutions-in-2025/" target="_blank" rel="noopener" class="stat-source">Source: National Judicial Data Grid, 2025</a>
@@ -312,31 +679,31 @@
       </div>
 
       <!-- Breakdown -->
-      <div class="breakdown">
+      <div class="breakdown reveal">
         <h3>Where is India's unclaimed money?</h3>
         <p>A breakdown of &#8377;1.84 lakh crore in unclaimed financial assets across categories:</p>
         <div class="breakdown-grid">
-          <div class="breakdown-item">
+          <div class="breakdown-item reveal delay-1">
             <span class="breakdown-item-label">Bank Deposits (FDs, Savings)</span>
             <span class="breakdown-item-value">&#8377;78,213 Cr</span>
           </div>
-          <div class="breakdown-item">
+          <div class="breakdown-item reveal delay-2">
             <span class="breakdown-item-label">Insurance Policies</span>
             <span class="breakdown-item-value">&#8377;21,718 Cr</span>
           </div>
-          <div class="breakdown-item">
+          <div class="breakdown-item reveal delay-1">
             <span class="breakdown-item-label">Shares &amp; Dividends (IEPF)</span>
             <span class="breakdown-item-value">&#8377;50,000 Cr*</span>
           </div>
-          <div class="breakdown-item">
+          <div class="breakdown-item reveal delay-2">
             <span class="breakdown-item-label">EPF / Provident Fund</span>
             <span class="breakdown-item-value">&#8377;8,505 Cr</span>
           </div>
-          <div class="breakdown-item">
+          <div class="breakdown-item reveal delay-1">
             <span class="breakdown-item-label">Mutual Funds</span>
             <span class="breakdown-item-value">&#8377;3,452 Cr</span>
           </div>
-          <div class="breakdown-item">
+          <div class="breakdown-item reveal delay-2">
             <span class="breakdown-item-label">Unpaid Dividends</span>
             <span class="breakdown-item-value">&#8377;9,000 Cr</span>
           </div>
@@ -359,26 +726,32 @@
   <!-- Real Stories -->
   <section class="stories">
     <div class="stories-inner">
-      <h2>This Happens Every Day</h2>
-      <p class="subtitle">These aren't rare edge cases. They're the everyday reality for millions of Indian families.</p>
+      <div class="section-header reveal">
+        <div class="section-label section-label-red">
+          <span class="section-label-dot"></span>
+          Real Stories
+        </div>
+        <h2>This happens every day</h2>
+        <p>These aren't rare edge cases. They're the everyday reality for millions of Indian families.</p>
+      </div>
       <div class="story-grid">
-        <div class="story-card">
-          <div class="emoji">💔</div>
+        <div class="story-card reveal-left delay-1">
+          <div class="story-emoji">💔</div>
           <h3>The FD Nobody Knew About</h3>
           <p>A father passes away. Months later, the family discovers he had <span class="highlight">3 fixed deposits across different banks</span> — but no nominee was updated. The maturity dates pass. The money moves to RBI's unclaimed pool. The family never knows.</p>
         </div>
-        <div class="story-card">
-          <div class="emoji">📋</div>
+        <div class="story-card reveal-right delay-2">
+          <div class="story-emoji">📋</div>
           <h3>The Insurance That Lapsed</h3>
           <p>A husband had a &#8377;50 lakh term insurance policy. After his death, his wife <span class="highlight">didn't know it existed</span>. The premium auto-debit stopped. The policy lapsed. IRDAI data shows 90% of unclaimed insurance is from agent-sold policies where families have no records.</p>
         </div>
-        <div class="story-card">
-          <div class="emoji">⚖️</div>
+        <div class="story-card reveal-left delay-1">
+          <div class="story-emoji">⚖️</div>
           <h3>The Inheritance Dispute</h3>
           <p>Two brothers, a family property, no documented will. One claims their father promised him the house. <span class="highlight">The case drags on for 8 years</span> in court. 40% of all will-related cases in India involve validity challenges.</p>
         </div>
-        <div class="story-card">
-          <div class="emoji">🏦</div>
+        <div class="story-card reveal-right delay-2">
+          <div class="story-emoji">🏦</div>
           <h3>The Scattered Investments</h3>
           <p>A working professional has mutual funds with 3 AMCs, stocks in 2 demat accounts, PPF, NPS, and crypto. After a sudden health emergency, <span class="highlight">his family can't locate half of it</span>. Each platform needs separate claims, separate paperwork.</p>
         </div>
@@ -389,13 +762,16 @@
   <!-- Solution: With vs Without -->
   <section class="solution">
     <div class="solution-inner">
-      <div class="solution-header">
-        <h2>What Virasat Changes</h2>
+      <div class="section-header reveal">
+        <div class="section-label">
+          <span class="section-label-dot"></span>
+          The Solution
+        </div>
+        <h2>What Virasat changes</h2>
         <p>The difference between leaving your family helpless and leaving them prepared.</p>
       </div>
-
       <div class="solution-compare">
-        <div class="compare-card compare-without">
+        <div class="compare-card compare-without reveal-left">
           <h3><span>&#10005;</span> Without Virasat</h3>
           <ul>
             <li><span class="x-mark">&#10005;</span> Family doesn't know which bank accounts exist</li>
@@ -406,7 +782,7 @@
             <li><span class="x-mark">&#10005;</span> Loans and liabilities discovered too late</li>
           </ul>
         </div>
-        <div class="compare-card compare-with">
+        <div class="compare-card compare-with reveal-right">
           <h3><span>&#10003;</span> With Virasat</h3>
           <ul>
             <li><span class="check-mark">&#10003;</span> Every account, policy, investment documented in one vault</li>
@@ -424,66 +800,86 @@
   <!-- Features -->
   <section id="features" class="features">
     <div class="features-inner">
-      <div class="section-header">
-        <h2>Everything You Need</h2>
+      <div class="section-header reveal">
+        <div class="section-label">
+          <span class="section-label-dot"></span>
+          Features
+        </div>
+        <h2>Everything you need</h2>
         <p>A complete system to protect your family's financial future.</p>
       </div>
       <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+        <div class="feature-card-wrap reveal delay-1">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+            </div>
+            <h3>Secure Vault</h3>
+            <p>Store bank accounts, investments, insurance, property, loans, digital assets — organized by 100+ categories.</p>
           </div>
-          <h3>Secure Vault</h3>
-          <p>Store bank accounts, investments, insurance, property, loans, digital assets — organized by 100+ categories.</p>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
+        <div class="feature-card-wrap reveal delay-2">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
+            </div>
+            <h3>Trusted Nominees</h3>
+            <p>Add family members with granular access — full access, household only, or emergency only. They see what you allow.</p>
           </div>
-          <h3>Trusted Nominees</h3>
-          <p>Add family members with granular access — full access, household only, or emergency only. They see what you allow.</p>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+        <div class="feature-card-wrap reveal delay-3">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+            </div>
+            <h3>Safety Net</h3>
+            <p>If you stop checking in, access is automatically granted to nominees. You control the timer. You can always cancel.</p>
           </div>
-          <h3>Safety Net</h3>
-          <p>If you stop checking in, access is automatically granted to nominees. You control the timer. You can always cancel.</p>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+        <div class="feature-card-wrap reveal delay-4">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+            </div>
+            <h3>Smart Alerts</h3>
+            <p>Get notified before documents expire, policies lapse, or renewals are due. Never miss a costly deadline.</p>
           </div>
-          <h3>Smart Alerts</h3>
-          <p>Get notified before documents expire, policies lapse, or renewals are due. Never miss a costly deadline.</p>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+        <div class="feature-card-wrap reveal delay-1">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+            </div>
+            <h3>Action Guides</h3>
+            <p>Write step-by-step instructions for your family: who to call, what to claim, which documents to carry.</p>
           </div>
-          <h3>Action Guides</h3>
-          <p>Write step-by-step instructions for your family: who to call, what to claim, which documents to carry.</p>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z"/></svg>
+        <div class="feature-card-wrap reveal delay-2">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z"/></svg>
+            </div>
+            <h3>Secure Sharing</h3>
+            <p>Share individual items via secure links with optional expiry. Per-category or per-item controls.</p>
           </div>
-          <h3>Secure Sharing</h3>
-          <p>Share individual items via secure links with optional expiry. Per-category or per-item controls.</p>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"/></svg>
+        <div class="feature-card-wrap reveal delay-3">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"/></svg>
+            </div>
+            <h3>Mobile Ready</h3>
+            <p>Works on any device. Add items, check on nominees, manage your legacy on the go.</p>
           </div>
-          <h3>Mobile Ready</h3>
-          <p>Works on any device. Add items, check on nominees, manage your legacy on the go.</p>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z"/></svg>
+        <div class="feature-card-wrap reveal delay-4">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z"/></svg>
+            </div>
+            <h3>Audit Trail</h3>
+            <p>Every action is logged. Know who viewed what, when items were shared, and when nominees accessed your vault.</p>
           </div>
-          <h3>Audit Trail</h3>
-          <p>Every action is logged. Know who viewed what, when items were shared, and when nominees accessed your vault.</p>
         </div>
       </div>
     </div>
@@ -492,23 +888,28 @@
   <!-- How It Works -->
   <section class="how-it-works">
     <div class="how-inner">
-      <div class="section-header">
-        <h2>How It Works</h2>
+      <div class="section-header reveal">
+        <div class="section-label">
+          <span class="section-label-dot"></span>
+          Getting Started
+        </div>
+        <h2>How it works</h2>
         <p>Three steps to protect your family's financial future.</p>
       </div>
-      <div class="steps-grid">
-        <div class="step">
-          <div class="step-num">1</div>
+      <div class="timeline" id="timeline">
+        <div class="timeline-line-fill" id="timelineFill"></div>
+        <div class="timeline-step reveal" data-step="1">
+          <div class="timeline-num">1</div>
           <h3>Add Your Assets</h3>
           <p>Add bank accounts, insurance, investments, property, digital accounts — anything your family should know about. Attach documents if needed.</p>
         </div>
-        <div class="step">
-          <div class="step-num">2</div>
+        <div class="timeline-step reveal" data-step="2">
+          <div class="timeline-num">2</div>
           <h3>Add Trusted People</h3>
           <p>Invite your spouse, children, or trusted advisor as nominees. Set what each person can see — full, household, or emergency only.</p>
         </div>
-        <div class="step">
-          <div class="step-num">3</div>
+        <div class="timeline-step reveal" data-step="3">
+          <div class="timeline-num">3</div>
           <h3>Set Up Your Safety Net</h3>
           <p>Configure the inactivity timer. If you don't check in, Virasat automatically grants access to your nominees. You stay in control.</p>
         </div>
@@ -519,23 +920,27 @@
   <!-- Security -->
   <section class="security">
     <div class="security-inner">
-      <div class="section-header">
-        <h2>Built for Security</h2>
+      <div class="section-header reveal">
+        <div class="section-label">
+          <span class="section-label-dot"></span>
+          Security
+        </div>
+        <h2>Built for security</h2>
         <p>Your family's financial data deserves the highest protection.</p>
       </div>
       <div class="security-grid">
-        <div class="security-item">
-          <div class="icon">🔒</div>
+        <div class="security-item reveal delay-1">
+          <div class="security-icon">🔒</div>
           <h3>Encrypted in Transit</h3>
           <p>All data encrypted via TLS. Passwords hashed with industry-standard algorithms.</p>
         </div>
-        <div class="security-item">
-          <div class="icon">👁️</div>
+        <div class="security-item reveal delay-2">
+          <div class="security-icon">👁️</div>
           <h3>Granular Access Control</h3>
           <p>Nominees only see what you explicitly share. Per-category and per-item controls.</p>
         </div>
-        <div class="security-item">
-          <div class="icon">📋</div>
+        <div class="security-item reveal delay-3">
+          <div class="security-icon">📋</div>
           <h3>Complete Audit Trail</h3>
           <p>Every login, view, share, and access is logged. Full transparency at all times.</p>
         </div>
@@ -546,37 +951,45 @@
   <!-- Pricing -->
   <section class="pricing">
     <div class="pricing-inner">
-      <div class="section-header">
-        <h2>Simple Pricing</h2>
+      <div class="section-header reveal">
+        <div class="section-label">
+          <span class="section-label-dot"></span>
+          Pricing
+        </div>
+        <h2>Simple pricing</h2>
         <p>Start free. Upgrade when you need more.</p>
       </div>
       <div class="pricing-grid">
-        <div class="price-card price-free">
-          <h3>Free</h3>
-          <div class="price-amount">&#8377;0</div>
-          <div class="price-period">Forever free</div>
-          <ul>
-            <li><span style="color:var(--green-500)">&#10003;</span> Up to 25 vault items</li>
-            <li><span style="color:var(--green-500)">&#10003;</span> 2 nominees</li>
-            <li><span style="color:var(--green-500)">&#10003;</span> Safety Net</li>
-            <li><span style="color:var(--green-500)">&#10003;</span> Smart alerts</li>
-            <li><span style="color:var(--green-500)">&#10003;</span> Action guides</li>
-          </ul>
-          <a href="https://virasat.solvenow.in/register" class="price-btn-outline">Get Started</a>
+        <div class="price-card-wrap reveal delay-1">
+          <div class="price-card price-free">
+            <h3>Free</h3>
+            <div class="price-amount">&#8377;0</div>
+            <div class="price-period">Forever free</div>
+            <ul>
+              <li><span class="price-check" style="color:var(--green-500)">&#10003;</span> Up to 25 vault items</li>
+              <li><span class="price-check" style="color:var(--green-500)">&#10003;</span> 2 nominees</li>
+              <li><span class="price-check" style="color:var(--green-500)">&#10003;</span> Safety Net</li>
+              <li><span class="price-check" style="color:var(--green-500)">&#10003;</span> Smart alerts</li>
+              <li><span class="price-check" style="color:var(--green-500)">&#10003;</span> Action guides</li>
+            </ul>
+            <a href="https://virasat.solvenow.in/register" class="price-btn-outline">Get Started</a>
+          </div>
         </div>
-        <div class="price-card price-premium">
-          <span class="price-badge">Recommended</span>
-          <h3>Premium</h3>
-          <div class="price-amount">&#8377;99<span style="font-size:14px;font-weight:400;opacity:0.8">/month</span></div>
-          <div class="price-period">or &#8377;999/year (save 16%)</div>
-          <ul>
-            <li>&#10003; Unlimited vault items</li>
-            <li>&#10003; Unlimited nominees</li>
-            <li>&#10003; File attachments</li>
-            <li>&#10003; Priority support</li>
-            <li>&#10003; Everything in Free</li>
-          </ul>
-          <a href="https://virasat.solvenow.in/register" class="price-btn-white">Start Free Trial</a>
+        <div class="price-card-wrap reveal delay-2">
+          <div class="price-card price-premium">
+            <span class="price-badge">Recommended</span>
+            <h3>Premium</h3>
+            <div class="price-amount">&#8377;99<span style="font-size:14px;font-weight:400;opacity:0.8">/month</span></div>
+            <div class="price-period">or &#8377;999/year (save 16%)</div>
+            <ul>
+              <li>&#10003; Unlimited vault items</li>
+              <li>&#10003; Unlimited nominees</li>
+              <li>&#10003; File attachments</li>
+              <li>&#10003; Priority support</li>
+              <li>&#10003; Everything in Free</li>
+            </ul>
+            <a href="https://virasat.solvenow.in/register" class="price-btn-white">Start Free Trial</a>
+          </div>
         </div>
       </div>
     </div>
@@ -584,16 +997,17 @@
 
   <!-- CTA -->
   <section class="cta">
-    <div class="cta-inner">
+    <div class="cta-particles" id="particles"></div>
+    <div class="cta-inner reveal">
       <h2>Your family deserves to be prepared</h2>
       <p>It takes 10 minutes to add your first few items. That's all it takes to start protecting your family from becoming another statistic.</p>
-      <a href="https://virasat.solvenow.in/register" class="btn-white">Create Your Free Account</a>
+      <a href="https://virasat.solvenow.in/register" class="btn-cta-primary">Create Your Free Account</a>
     </div>
   </section>
 
   <!-- Footer -->
   <footer class="footer">
-    <div class="footer-inner">
+    <div class="footer-inner reveal">
       <div class="footer-grid">
         <div>
           <div class="footer-brand">
@@ -620,10 +1034,93 @@
         </div>
       </div>
       <div class="footer-bottom">
-        &copy; 2026 SolveNow. Built with care in India.
+        <span>&copy; 2026 SolveNow. All rights reserved.</span>
+        <span>Built with <span class="footer-heart">&hearts;</span> in India</span>
       </div>
     </div>
   </footer>
+
+  <script>
+    // Navbar scroll
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // Scroll reveal
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => {
+      revealObserver.observe(el);
+    });
+
+    // Animated counters
+    function formatNumber(n) {
+      if (n >= 1000) return n.toLocaleString('en-IN');
+      return n.toString();
+    }
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const target = parseInt(el.dataset.target);
+          const suffix = el.dataset.suffix || '';
+          const prefix = el.dataset.prefix || '';
+          if (!target) return;
+
+          let current = 0;
+          const duration = 2000;
+          const startTime = performance.now();
+          const animate = (now) => {
+            const elapsed = now - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            // Ease out cubic
+            const eased = 1 - Math.pow(1 - progress, 3);
+            current = Math.floor(eased * target);
+            el.textContent = prefix + formatNumber(current) + suffix;
+            if (progress < 1) requestAnimationFrame(animate);
+            else el.textContent = prefix + formatNumber(target) + suffix;
+          };
+          requestAnimationFrame(animate);
+          counterObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('[data-counter]').forEach(el => counterObserver.observe(el));
+
+    // Timeline animation
+    const timelineFill = document.getElementById('timelineFill');
+    const timelineSteps = document.querySelectorAll('.timeline-step');
+    const timelineObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          const stepIndex = parseInt(entry.target.dataset.step);
+          const totalSteps = timelineSteps.length;
+          timelineFill.style.height = (stepIndex / totalSteps) * 100 + '%';
+        }
+      });
+    }, { threshold: 0.5 });
+
+    timelineSteps.forEach(step => timelineObserver.observe(step));
+
+    // CTA particles
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 30; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.width = p.style.height = (Math.random() * 4 + 2) + 'px';
+      p.style.animationDuration = (Math.random() * 8 + 6) + 's';
+      p.style.animationDelay = (Math.random() * 10) + 's';
+      particlesContainer.appendChild(p);
+    }
+  </script>
 
 </body>
 </html>
