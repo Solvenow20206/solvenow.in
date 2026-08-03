@@ -3,916 +3,505 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SolveNow — Real Solutions for Real Problems</title>
-  <meta name="description" content="SolveNow builds practical digital tools that solve everyday problems for Indian families and businesses. Discover Virasat, Inventra, and more.">
-  <meta property="og:title" content="SolveNow — Real Solutions for Real Problems">
-  <meta property="og:description" content="Practical digital tools that solve everyday problems for Indian families and businesses.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://solvenow.in">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%234f46e5'/><text x='16' y='22' font-family='system-ui' font-size='18' font-weight='700' fill='white' text-anchor='middle'>S</text></svg>">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <title>Continuity Labs — Preserving Human Legacy</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='16' fill='%23d9a028'/><text x='16' y='22' font-family='system-ui' font-size='18' font-weight='700' fill='%2304121a' text-anchor='middle'>C</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;700;900&display=swap" rel="stylesheet">
+  
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1a1a2e; -webkit-font-smoothing: antialiased; line-height: 1.6; overflow-x: hidden; }
-
+    /* ═══════════════════════════════════════
+       THEME & CORE
+    ═══════════════════════════════════════ */
     :root {
-      --navy: #0f172a;
-      --navy-light: #1e293b;
-      --indigo: #4f46e5;
-      --indigo-dark: #3730a3;
-      --indigo-light: #818cf8;
-      --violet: #7c3aed;
-      --violet-light: #a78bfa;
-      --slate-50: #f8fafc;
-      --slate-100: #f1f5f9;
-      --slate-200: #e2e8f0;
-      --slate-300: #cbd5e1;
-      --slate-400: #94a3b8;
-      --slate-500: #64748b;
-      --slate-600: #475569;
-      --slate-700: #334155;
-      --slate-800: #1e293b;
-      --slate-900: #0f172a;
-      --emerald: #059669;
-      --emerald-light: #d1fae5;
-      --amber: #d97706;
-      --amber-light: #fef3c7;
+      --bg-midnight: #04121a;
+      --gold-primary: #d9a028;
+      --gold-light: #fcf8ee;
+      --glass-bg: rgba(10, 29, 38, 0.4);
+      --glass-border: rgba(217, 160, 40, 0.15);
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body, html {
+      width: 100%;
+      height: 100%;
+      background-color: var(--bg-midnight);
+      font-family: 'Outfit', sans-serif;
+      color: var(--gold-light);
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      /* Locked initially, unlocked via JS */
+      overflow: hidden; 
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-midnight); }
+    ::-webkit-scrollbar-thumb { background: rgba(217, 160, 40, 0.5); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--gold-primary); }
+
+    /* ═══════════════════════════════════════
+       CANVAS & BACKGROUND
+    ═══════════════════════════════════════ */
+    #constellation-canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100vh;
+      z-index: 0;
+    }
+    
+    /* When unlocked, canvas becomes a fixed background */
+    #constellation-canvas.ambient-mode {
+      position: fixed;
+      z-index: 0;
+      opacity: 0.3; /* Dim it so content is readable */
+      transition: opacity 2s ease;
+    }
+
+    .vignette {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100vh;
+      background: radial-gradient(circle at center, transparent 30%, var(--bg-midnight) 100%);
+      pointer-events: none; z-index: 1;
     }
 
     /* ═══════════════════════════════════════
-       NAVBAR — Glass morphism
+       NAVIGATION
     ═══════════════════════════════════════ */
-    .navbar {
-      position: fixed; top: 0; width: 100%; z-index: 100;
-      background: rgba(15, 23, 42, 0.0);
-      backdrop-filter: blur(0px);
-      border-bottom: 1px solid transparent;
-      transition: all 0.4s ease;
-    }
-    .navbar.scrolled {
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-    .navbar-inner {
-      max-width: 1100px; margin: 0 auto; padding: 0 24px;
-      height: 68px; display: flex; align-items: center; justify-content: space-between;
-    }
-    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .logo-icon {
-      width: 36px; height: 36px; background: var(--indigo); border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      color: white; font-weight: 700; font-size: 16px;
-      box-shadow: 0 0 20px rgba(79,70,229,0.4);
-    }
-    .logo-text { font-size: 19px; font-weight: 800; color: white; letter-spacing: -0.02em; }
-    .nav-links { display: flex; align-items: center; gap: 32px; }
-    .nav-links a {
-      font-size: 14px; color: rgba(255,255,255,0.7); text-decoration: none;
-      font-weight: 500; transition: color 0.2s; position: relative;
-    }
-    .nav-links a::after {
-      content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
-      background: var(--indigo-light); transition: width 0.3s ease; border-radius: 1px;
-    }
-    .nav-links a:hover { color: white; }
-    .nav-links a:hover::after { width: 100%; }
-    .nav-signin {
-      background: rgba(255,255,255,0.1) !important; color: white !important;
-      padding: 8px 20px !important; border-radius: 10px !important;
-      font-weight: 600 !important; border: 1px solid rgba(255,255,255,0.15);
-      transition: all 0.3s !important;
-    }
-    .nav-signin:hover { background: var(--indigo) !important; border-color: var(--indigo) !important; }
-    .nav-signin::after { display: none !important; }
-
-    /* ═══════════════════════════════════════
-       HERO — Animated gradient + floating shapes
-    ═══════════════════════════════════════ */
-    .hero {
-      position: relative; min-height: 100vh; display: flex; align-items: center;
-      justify-content: center; overflow: hidden; padding: 120px 24px 80px;
-      background: linear-gradient(-45deg, #0f172a, #1e1b4e, #312e81, #1e1b4e, #0f172a);
-      background-size: 400% 400%;
-      animation: gradientShift 15s ease infinite;
-    }
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    /* Floating shapes container */
-    .hero-shapes { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
-    .shape {
-      position: absolute; border-radius: 50%; opacity: 0.08;
-      animation: floatShape 20s ease-in-out infinite;
-    }
-    .shape-1 { width: 400px; height: 400px; background: var(--indigo-light); top: -10%; right: -5%; animation-delay: 0s; animation-duration: 22s; }
-    .shape-2 { width: 300px; height: 300px; background: var(--violet); bottom: -8%; left: -5%; animation-delay: -5s; animation-duration: 18s; }
-    .shape-3 { width: 200px; height: 200px; background: #60a5fa; top: 40%; left: 10%; animation-delay: -10s; animation-duration: 25s; }
-    .shape-4 { width: 150px; height: 150px; background: var(--violet-light); top: 20%; right: 15%; animation-delay: -7s; animation-duration: 20s; border-radius: 30%; }
-    .shape-5 { width: 100px; height: 100px; background: #34d399; bottom: 20%; right: 10%; animation-delay: -3s; animation-duration: 16s; }
-    .shape-hex {
-      width: 120px; height: 120px; background: var(--indigo); opacity: 0.06;
-      top: 60%; left: 60%; animation-delay: -12s;
-      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-      border-radius: 0;
-    }
-    @keyframes floatShape {
-      0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
-      25% { transform: translate(30px, -40px) rotate(5deg) scale(1.05); }
-      50% { transform: translate(-20px, 20px) rotate(-3deg) scale(0.95); }
-      75% { transform: translate(15px, 35px) rotate(7deg) scale(1.02); }
-    }
-
-    /* Grid overlay */
-    .hero::before {
-      content: ''; position: absolute; inset: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-      background-size: 60px 60px;
-      mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 20%, transparent 70%);
-    }
-
-    .hero-inner { max-width: 850px; text-align: center; position: relative; z-index: 2; }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
-      color: rgba(255,255,255,0.9); font-size: 13px; font-weight: 600;
-      padding: 8px 20px; border-radius: 100px; margin-bottom: 32px;
-      backdrop-filter: blur(8px);
-    }
-    .hero-badge-dot {
-      width: 7px; height: 7px; background: #34d399; border-radius: 50%;
-      animation: pulse-dot 2s ease-in-out infinite;
-    }
-    @keyframes pulse-dot {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(52,211,153,0.5); }
-      50% { box-shadow: 0 0 0 6px rgba(52,211,153,0); }
-    }
-
-    .hero h1 {
-      font-size: clamp(40px, 6vw, 68px); font-weight: 900;
-      letter-spacing: -0.04em; line-height: 1.1; margin-bottom: 28px; color: white;
-    }
-    .hero-cycle-wrapper {
-      display: inline-block; position: relative; min-width: 280px;
-      background: linear-gradient(135deg, var(--indigo-light), var(--violet-light), #60a5fa);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .hero-cycle-text {
-      display: inline-block;
-      animation: cycleSlideIn 0.5s ease forwards;
-    }
-    @keyframes cycleSlideIn {
-      from { opacity: 0; transform: translateY(20px); filter: blur(4px); }
-      to { opacity: 1; transform: translateY(0); filter: blur(0); }
-    }
-
-    .hero p {
-      font-size: 19px; color: rgba(255,255,255,0.55); max-width: 580px;
-      margin: 0 auto 44px; line-height: 1.75; font-weight: 400;
-    }
-    .hero-buttons { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; }
-    .btn-hero-primary {
-      display: inline-flex; align-items: center; gap: 10px;
-      background: var(--indigo); color: white; padding: 16px 36px;
-      border-radius: 14px; font-size: 16px; font-weight: 700;
-      text-decoration: none; transition: all 0.3s;
-      box-shadow: 0 0 30px rgba(79,70,229,0.4), 0 4px 16px rgba(0,0,0,0.2);
-      position: relative; overflow: hidden;
-    }
-    .btn-hero-primary::before {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
-      transform: translateX(-100%);
-      transition: transform 0.6s;
-    }
-    .btn-hero-primary:hover::before { transform: translateX(100%); }
-    .btn-hero-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 40px rgba(79,70,229,0.6), 0 8px 24px rgba(0,0,0,0.3);
-    }
-    .btn-hero-primary svg { transition: transform 0.3s; }
-    .btn-hero-primary:hover svg { transform: translateX(4px); }
-
-    .btn-hero-secondary {
-      display: inline-flex; align-items: center; gap: 10px;
-      background: transparent; color: rgba(255,255,255,0.8); padding: 16px 36px;
-      border-radius: 14px; font-size: 16px; font-weight: 600;
-      text-decoration: none; transition: all 0.3s;
-      border: 1px solid rgba(255,255,255,0.15);
-    }
-    .btn-hero-secondary:hover {
-      color: white; border-color: rgba(255,255,255,0.35);
-      background: rgba(255,255,255,0.05); transform: translateY(-2px);
-    }
-
-    /* Scroll indicator */
-    .scroll-indicator {
-      position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
-      display: flex; flex-direction: column; align-items: center; gap: 8px;
-      color: rgba(255,255,255,0.3); font-size: 11px; font-weight: 500;
-      letter-spacing: 0.1em; text-transform: uppercase;
-    }
-    .scroll-arrow {
-      width: 24px; height: 24px; border-right: 2px solid rgba(255,255,255,0.3);
-      border-bottom: 2px solid rgba(255,255,255,0.3); transform: rotate(45deg);
-      animation: scrollBounce 2s ease-in-out infinite;
-    }
-    @keyframes scrollBounce {
-      0%, 100% { transform: rotate(45deg) translate(0, 0); opacity: 0.3; }
-      50% { transform: rotate(45deg) translate(5px, 5px); opacity: 0.8; }
-    }
-
-    /* ═══════════════════════════════════════
-       IMPACT NUMBERS — Animated counters
-    ═══════════════════════════════════════ */
-    .impact {
-      padding: 56px 24px; position: relative;
-      background: var(--navy);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-    .impact-inner {
-      max-width: 900px; margin: 0 auto;
-      display: flex; justify-content: center; gap: 0;
-    }
-    .impact-stat {
-      flex: 1; text-align: center; padding: 20px 32px;
-      border-right: 1px solid rgba(255,255,255,0.08);
-    }
-    .impact-stat:last-child { border-right: none; }
-    .impact-number {
-      font-size: clamp(32px, 4vw, 48px); font-weight: 900;
-      background: linear-gradient(135deg, var(--indigo-light), var(--violet-light));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-      letter-spacing: -0.03em;
-    }
-    .impact-label { font-size: 14px; color: var(--slate-400); font-weight: 500; margin-top: 4px; }
-
-    /* ═══════════════════════════════════════
-       PROBLEMS — Scroll reveal cards
-    ═══════════════════════════════════════ */
-    .problems { padding: 100px 24px; background: var(--slate-50); position: relative; }
-    .problems::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 120px;
-      background: linear-gradient(to bottom, var(--navy), var(--slate-50));
-    }
-    .problems-inner { max-width: 1000px; margin: 0 auto; position: relative; z-index: 1; }
-    .section-header { text-align: center; margin-bottom: 56px; }
-    .section-label {
-      display: inline-flex; align-items: center; gap: 8px;
-      font-size: 12px; font-weight: 700; color: var(--indigo);
-      text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 16px;
-    }
-    .section-label-dot { width: 6px; height: 6px; background: var(--indigo); border-radius: 50%; }
-    .section-header h2 {
-      font-size: clamp(30px, 4vw, 44px); font-weight: 900;
-      letter-spacing: -0.03em; color: var(--navy); margin-bottom: 14px; line-height: 1.15;
-    }
-    .section-header p { font-size: 17px; color: var(--slate-500); max-width: 550px; margin: 0 auto; }
-    .problems-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-    .problem-card {
-      padding: 36px; border-radius: 20px; background: white;
-      border: 1px solid var(--slate-200); position: relative; overflow: hidden;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .problem-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 20px 50px rgba(15,23,42,0.1);
-    }
-    .problem-card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
-      background: linear-gradient(90deg, var(--indigo), var(--violet));
-      transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
-    }
-    .problem-card:hover::before { transform: scaleX(1); }
-    .problem-icon {
-      width: 56px; height: 56px; border-radius: 16px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 26px; margin-bottom: 20px;
-      background: linear-gradient(135deg, #eef2ff, #ede9fe);
-    }
-    .problem-card h3 { font-size: 17px; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
-    .problem-card p { font-size: 14px; color: var(--slate-500); line-height: 1.75; }
-
-    /* Scroll reveal animations */
-    .reveal { opacity: 0; transform: translateY(40px); transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-    .reveal-left { opacity: 0; transform: translateX(-50px); transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
-    .reveal-left.visible { opacity: 1; transform: translateX(0); }
-    .reveal-right { opacity: 0; transform: translateX(50px); transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
-    .reveal-right.visible { opacity: 1; transform: translateX(0); }
-    .reveal-scale { opacity: 0; transform: scale(0.85); transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
-    .reveal-scale.visible { opacity: 1; transform: scale(1); }
-
-    /* Stagger delays */
-    .delay-1 { transition-delay: 0.1s; }
-    .delay-2 { transition-delay: 0.2s; }
-    .delay-3 { transition-delay: 0.3s; }
-    .delay-4 { transition-delay: 0.4s; }
-
-    /* ═══════════════════════════════════════
-       PRODUCTS — 3D tilt cards
-    ═══════════════════════════════════════ */
-    .products { padding: 100px 24px; background: white; }
-    .products-inner { max-width: 1000px; margin: 0 auto; }
-    .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; }
-    .product-card-wrap { perspective: 800px; }
-    .product-card {
-      background: white; border: 1px solid var(--slate-200); border-radius: 24px;
-      padding: 40px; transition: transform 0.4s ease, box-shadow 0.4s ease;
-      text-decoration: none; color: inherit; display: block; position: relative;
-      transform-style: preserve-3d; will-change: transform;
-    }
-    .product-card:hover {
-      box-shadow: 0 30px 60px rgba(15,23,42,0.12), 0 0 0 1px rgba(79,70,229,0.1);
-    }
-    .product-card-inner { transform: translateZ(20px); }
-    .product-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
-    .product-logo {
-      width: 54px; height: 54px; border-radius: 16px;
-      display: flex; align-items: center; justify-content: center;
-      position: relative;
-    }
-    .product-logo svg { width: 26px; height: 26px; color: white; position: relative; z-index: 1; }
-    .product-logo-virasat { background: linear-gradient(135deg, var(--indigo), var(--violet)); }
-    .product-logo-inventra { background: linear-gradient(135deg, var(--emerald), #10b981); }
-    .product-name { font-size: 22px; font-weight: 800; color: var(--navy); letter-spacing: -0.02em; }
-    .product-subtitle { font-size: 13px; color: var(--slate-400); font-weight: 500; margin-top: 2px; }
-    .product-card p { font-size: 15px; color: var(--slate-500); line-height: 1.75; margin-bottom: 24px; }
-    .product-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
-    .tag {
-      font-size: 12px; font-weight: 600; padding: 6px 14px;
-      border-radius: 100px; transition: transform 0.2s;
-    }
-    .tag:hover { transform: scale(1.05); }
-    .tag-indigo { background: #eef2ff; color: var(--indigo); }
-    .tag-emerald { background: var(--emerald-light); color: var(--emerald); }
-
-    .product-status { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; }
-    .status-live { color: #059669; }
-    .status-dot-live {
-      width: 8px; height: 8px; background: #059669; border-radius: 50%;
-      animation: pulse-dot 2s ease-in-out infinite;
-    }
-    .status-soon { color: var(--amber); }
-    .status-dot-soon { width: 8px; height: 8px; background: var(--amber); border-radius: 50%; opacity: 0.7; }
-
-    .product-link {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: 14px; font-weight: 600; color: var(--indigo);
-      text-decoration: none; transition: gap 0.3s;
-    }
-    .product-link:hover { gap: 10px; }
-    .product-link svg { width: 16px; height: 16px; }
-
-    /* ═══════════════════════════════════════
-       HOW WE BUILD — Animated timeline
-    ═══════════════════════════════════════ */
-    .timeline-section { padding: 100px 24px; background: var(--slate-50); position: relative; }
-    .timeline-inner { max-width: 700px; margin: 0 auto; }
-    .timeline {
-      position: relative; padding-left: 60px;
-      display: flex; flex-direction: column; gap: 48px;
-    }
-    .timeline::before {
-      content: ''; position: absolute; left: 22px; top: 0; bottom: 0; width: 2px;
-      background: var(--slate-200);
-    }
-    .timeline-line-fill {
-      position: absolute; left: 22px; top: 0; width: 2px; height: 0;
-      background: linear-gradient(to bottom, var(--indigo), var(--violet));
-      transition: height 0.8s ease;
-    }
-    .timeline-step { position: relative; }
-    .timeline-num {
-      position: absolute; left: -60px; top: 0;
-      width: 44px; height: 44px; border-radius: 14px;
-      background: white; border: 2px solid var(--slate-200);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px; font-weight: 800; color: var(--slate-400);
-      transition: all 0.5s;
-      z-index: 2;
-    }
-    .timeline-step.active .timeline-num {
-      background: var(--indigo); border-color: var(--indigo);
-      color: white; transform: scale(1.15);
-      box-shadow: 0 0 20px rgba(79,70,229,0.4);
-    }
-    .timeline-step h3 { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
-    .timeline-step p { font-size: 15px; color: var(--slate-500); line-height: 1.7; }
-
-    /* ═══════════════════════════════════════
-       CTA — Animated gradient + particles
-    ═══════════════════════════════════════ */
-    .cta {
-      padding: 100px 24px; text-align: center; position: relative; overflow: hidden;
-      background: linear-gradient(-45deg, #0f172a, #1e1b4e, #312e81, #1e1b4e);
-      background-size: 400% 400%;
-      animation: gradientShift 12s ease infinite;
-    }
-    .cta-particles { position: absolute; inset: 0; pointer-events: none; }
-    .particle {
-      position: absolute; width: 4px; height: 4px;
-      background: rgba(255,255,255,0.2); border-radius: 50%;
-      animation: floatParticle linear infinite;
-    }
-    @keyframes floatParticle {
-      from { transform: translateY(100vh) scale(0); opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
-      to { transform: translateY(-20vh) scale(1); opacity: 0; }
-    }
-    .cta-inner { max-width: 600px; margin: 0 auto; position: relative; z-index: 1; }
-    .cta h2 {
-      font-size: clamp(28px, 4vw, 42px); font-weight: 900; color: white;
-      margin-bottom: 16px; letter-spacing: -0.03em; line-height: 1.15;
-    }
-    .cta p { font-size: 17px; color: var(--slate-400); margin-bottom: 40px; line-height: 1.7; }
-    .cta-buttons { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; }
-    .btn-cta-primary {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: white; color: var(--navy); padding: 16px 36px;
-      border-radius: 14px; font-size: 16px; font-weight: 700;
-      text-decoration: none; transition: all 0.3s;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    }
-    .btn-cta-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.3); background: var(--slate-100); }
-    .btn-cta-ghost {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: transparent; color: var(--slate-400); padding: 16px 36px;
-      border-radius: 14px; font-size: 16px; font-weight: 600;
-      text-decoration: none; transition: all 0.3s;
-      border: 1px solid rgba(255,255,255,0.12);
-    }
-    .btn-cta-ghost:hover { color: white; border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.05); }
-
-    /* ═══════════════════════════════════════
-       FOOTER
-    ═══════════════════════════════════════ */
-    .footer { background: var(--navy); color: var(--slate-400); padding: 64px 24px 40px; }
-    .footer-inner { max-width: 1000px; margin: 0 auto; }
-    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
-    .footer-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
-    .footer-brand .logo-icon { box-shadow: none; }
-    .footer-brand span { font-size: 17px; font-weight: 800; color: white; }
-    .footer p { font-size: 14px; line-height: 1.7; }
-    .footer h4 {
-      font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.5);
-      margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.1em;
-    }
-    .footer ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-    .footer ul a {
-      font-size: 14px; color: var(--slate-400); text-decoration: none;
-      transition: color 0.2s, padding-left 0.2s; display: inline-block;
-    }
-    .footer ul a:hover { color: white; padding-left: 4px; }
-    .footer-bottom {
-      border-top: 1px solid rgba(255,255,255,0.06); padding-top: 28px;
+    nav {
+      position: fixed; top: 0; left: 0; width: 100%;
       display: flex; justify-content: space-between; align-items: center;
-      font-size: 13px; color: var(--slate-600);
+      padding: 30px 5%;
+      z-index: 100;
+      background: linear-gradient(to bottom, rgba(4,18,26,0.9) 0%, transparent 100%);
+      opacity: 0; visibility: hidden; transform: translateY(-20px);
+      transition: all 1.5s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .footer-heart { color: #ef4444; display: inline-block; animation: heartbeat 1.5s ease-in-out infinite; }
-    @keyframes heartbeat {
-      0%, 100% { transform: scale(1); }
-      15% { transform: scale(1.2); }
-      30% { transform: scale(1); }
+    nav.active { opacity: 1; visibility: visible; transform: translateY(0); }
+    
+    .nav-brand { font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; font-size: 1.1rem; }
+    .nav-links { display: flex; gap: 30px; align-items: center; }
+    .nav-links a { color: var(--gold-light); text-decoration: none; font-size: 0.9rem; font-weight: 300; transition: color 0.3s; }
+    .nav-links a:hover { color: var(--gold-primary); }
+
+    /* Buttons */
+    .btn-gold {
+      display: inline-flex; justify-content: center; align-items: center;
+      padding: 14px 32px; border-radius: 100px;
+      font-size: 1rem; font-weight: 500; letter-spacing: 0.05em;
+      cursor: pointer; text-decoration: none;
+      background: rgba(217, 160, 40, 0.1); border: 1px solid var(--gold-primary);
+      color: var(--gold-primary);
+      box-shadow: 0 0 20px rgba(217, 160, 40, 0.1);
+      backdrop-filter: blur(10px); transition: all 0.4s ease;
+    }
+    .btn-gold:hover {
+      background: var(--gold-primary); color: var(--bg-midnight);
+      box-shadow: 0 0 40px rgba(217, 160, 40, 0.4); transform: scale(1.05);
     }
 
     /* ═══════════════════════════════════════
-       MOBILE RESPONSIVE
+       HERO (PHYSICS INTRO)
     ═══════════════════════════════════════ */
-    @media (max-width: 768px) {
-      .problems-grid { grid-template-columns: 1fr; }
-      .products-grid { grid-template-columns: 1fr; }
-      .impact-inner { flex-direction: column; gap: 0; }
-      .impact-stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); padding: 16px 20px; }
-      .impact-stat:last-child { border-bottom: none; }
-      .footer-grid { grid-template-columns: 1fr; gap: 32px; }
-      .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
-      .nav-links a:not(.nav-signin) { display: none; }
-      .hero { padding: 120px 20px 80px; min-height: auto; }
-      .hero h1 { font-size: 36px; }
-      .hero-cycle-wrapper { min-width: auto; display: block; }
-      .scroll-indicator { display: none; }
-      .timeline { padding-left: 50px; }
-      .timeline-num { left: -50px; width: 38px; height: 38px; font-size: 14px; }
-      .timeline::before, .timeline-line-fill { left: 18px; }
+    .hero-container {
+      position: relative;
+      width: 100%; height: 100vh;
+      z-index: 10;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      pointer-events: none; /* Let clicks pass to canvas */
     }
-    @media (max-width: 480px) {
-      .hero-buttons { flex-direction: column; align-items: center; }
-      .cta-buttons { flex-direction: column; align-items: center; }
+
+    .hero-text {
+      font-size: clamp(2rem, 4vw, 4rem); font-weight: 300;
+      text-align: center; letter-spacing: -0.02em;
+      opacity: 0.8; transition: opacity 2s ease, transform 2s ease;
+      text-shadow: 0 0 40px rgba(217, 160, 40, 0.4);
+    }
+    .hero-text span {
+      background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-primary) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 500;
+    }
+
+    .instruction {
+      position: absolute; bottom: 10%;
+      font-size: 0.9rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: rgba(252, 248, 238, 0.4); animation: pulse 3s infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
+
+    /* Hero Reveal Content */
+    .reveal-ui {
+      opacity: 0; visibility: hidden; transform: translateY(20px);
+      transition: all 2s cubic-bezier(0.16, 1, 0.3, 1);
+      text-align: center; position: absolute;
+      top: 50%; left: 50%; transform: translate(-50%, -50%);
+    }
+    .reveal-ui.active {
+      opacity: 1; visibility: visible; transform: translate(-50%, -50%);
+    }
+    
+    .scroll-arrow {
+      position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+      pointer-events: auto; opacity: 0; visibility: hidden;
+      transition: opacity 2s ease 1s; animation: bounce 2s infinite; cursor: pointer;
+    }
+    .scroll-arrow.active { opacity: 1; visibility: visible; }
+    @keyframes bounce { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 10px); } }
+
+    /* ═══════════════════════════════════════
+       CONTENT SECTIONS (Below the fold)
+    ═══════════════════════════════════════ */
+    main {
+      display: none; /* Blocked until reveal */
+      position: relative;
+      z-index: 10;
+      background: linear-gradient(to bottom, transparent 0%, var(--bg-midnight) 15%);
+    }
+    main.unlocked { display: block; }
+
+    section {
+      min-height: 100vh;
+      padding: 120px 5%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    
+    .content-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+      max-width: 1400px; margin: 0 auto; align-items: center;
+    }
+    
+    h2 { font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 300; line-height: 1.1; margin-bottom: 24px; letter-spacing: -0.03em;}
+    p.lead { font-size: 1.25rem; font-weight: 300; line-height: 1.7; color: rgba(252, 248, 238, 0.7); margin-bottom: 30px; }
+    
+    .img-fluid { width: 100%; border-radius: 20px; box-shadow: 0 40px 80px rgba(0,0,0,0.6); border: 1px solid var(--glass-border); }
+
+    /* Feature Cards */
+    .features-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 40px;
+    }
+    .feature-card {
+      background: var(--glass-bg); border: 1px solid var(--glass-border);
+      border-radius: 16px; padding: 32px; backdrop-filter: blur(24px);
+      transition: transform 0.4s ease;
+    }
+    .feature-card:hover { transform: translateY(-8px); border-color: rgba(217, 160, 40, 0.4); }
+    .feature-card h3 { font-size: 1.2rem; margin-bottom: 12px; color: var(--gold-light); font-weight: 400; }
+    .feature-card p { font-size: 0.95rem; color: rgba(252, 248, 238, 0.6); line-height: 1.6; }
+
+    footer {
+      padding: 60px 5%; text-align: center; border-top: 1px solid var(--glass-border);
+      color: rgba(252,248,238,0.4); font-size: 0.9rem; background: var(--bg-midnight);
+    }
+
+    @media (max-width: 992px) {
+      .content-grid { grid-template-columns: 1fr; gap: 40px; }
+      .nav-links { display: none; } /* Could add hamburger logic later */
+      .content-grid.reverse > div:first-child { order: 2; }
+      .content-grid.reverse > div:last-child { order: 1; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Navbar -->
-  <nav class="navbar" id="navbar">
-    <div class="navbar-inner">
-      <a href="/" class="logo">
-        <div class="logo-icon">S</div>
-        <span class="logo-text">SolveNow</span>
-      </a>
-      <div class="nav-links">
-        <a href="#products">Products</a>
-        <a href="#about">About</a>
-        <a href="https://virasat.solvenow.in/login" class="nav-signin">Sign In</a>
-      </div>
+  <!-- BACKGROUND: The Physics Engine -->
+  <canvas id="constellation-canvas"></canvas>
+  <div class="vignette"></div>
+
+  <!-- NAVIGATION (Hidden until reveal) -->
+  <nav id="main-nav">
+    <div class="nav-brand">Continuity Labs</div>
+    <div class="nav-links">
+      <a href="#about">About Us</a>
+      <a href="#products">Products</a>
+      <a href="#security">Security</a>
+      <a href="https://virasat.solvenow.in/login">Sign In</a>
+      <a href="https://virasat.solvenow.in/register" class="btn-gold" style="padding: 10px 24px;">Enter Vault</a>
     </div>
   </nav>
 
-  <!-- Hero -->
-  <section class="hero">
-    <div class="hero-shapes">
-      <div class="shape shape-1"></div>
-      <div class="shape shape-2"></div>
-      <div class="shape shape-3"></div>
-      <div class="shape shape-4"></div>
-      <div class="shape shape-5"></div>
-      <div class="shape shape-hex"></div>
+  <!-- HERO TOP FOLD (Interactive Intro) -->
+  <div class="hero-container" id="hero-fold">
+    <!-- Intro Phase -->
+    <div class="hero-text" id="intro-text">
+      Your life's work is fragmented.<br>
+      <span>Move to connect your legacy.</span>
     </div>
-    <div class="hero-inner">
-      <div class="hero-badge">
-        <span class="hero-badge-dot"></span>
-        Building from India, for the world
-      </div>
-      <h1>
-        Real solutions for<br>
-        <span class="hero-cycle-wrapper">
-          <span class="hero-cycle-text" id="cycleText">real problems</span>
-        </span>
+    <div class="instruction" id="instruction-text">Use cursor to interact</div>
+
+    <!-- Reveal Phase -->
+    <div class="reveal-ui" id="reveal-ui">
+      <h1 class="hero-text" style="opacity: 1; text-shadow: 0 0 60px rgba(217, 160, 40, 0.6);">
+        This is <span style="font-size: 1.3em;">Continuity.</span>
       </h1>
-      <p>
-        We build practical digital tools that solve everyday challenges —
-        from protecting your family's financial legacy to managing business assets.
-        No buzzwords, just things that work.
+      <p style="margin-top: 20px; font-size: 1.25rem; font-weight: 300; opacity: 0.8; max-width: 600px; line-height: 1.6;">
+        Welcome to Continuity Labs LLP. We engineer absolute security for the digital age, ensuring your family is never left in the dark.
       </p>
-      <div class="hero-buttons">
-        <a href="#products" class="btn-hero-primary">
-          Explore Our Products
-          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
-        </a>
-        <a href="#about" class="btn-hero-secondary">Learn More</a>
-      </div>
     </div>
-    <div class="scroll-indicator">
-      <span>Scroll</span>
-      <div class="scroll-arrow"></div>
-    </div>
-  </section>
+    
+    <a href="#about" class="scroll-arrow" id="scroll-arrow">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--gold-primary);">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+      </svg>
+    </a>
+  </div>
 
-  <!-- Impact Numbers -->
-  <section class="impact">
-    <div class="impact-inner">
-      <div class="impact-stat reveal">
-        <div class="impact-number" data-target="2" data-suffix="">0</div>
-        <div class="impact-label">Products Built</div>
-      </div>
-      <div class="impact-stat reveal delay-1">
-        <div class="impact-number" data-target="100" data-suffix="+" data-prefix="">0</div>
-        <div class="impact-label">Features Shipped</div>
-      </div>
-      <div class="impact-stat reveal delay-2">
-        <div class="impact-number" data-target="0" data-suffix="" data-text="Free">Free</div>
-        <div class="impact-label">To Get Started</div>
-      </div>
-      <div class="impact-stat reveal delay-3">
-        <div class="impact-number" data-target="100" data-suffix="%" data-prefix="">0</div>
-        <div class="impact-label">Made in India</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Problems -->
-  <section class="problems">
-    <div class="problems-inner">
-      <div class="section-header reveal">
-        <div class="section-label">
-          <span class="section-label-dot"></span>
-          The Problems
-        </div>
-        <h2>Real problems that<br>technology should have solved</h2>
-        <p>We don't build solutions looking for problems. We start with pain points we've lived ourselves.</p>
-      </div>
-      <div class="problems-grid">
-        <div class="problem-card reveal delay-1">
-          <div class="problem-icon">🏠</div>
-          <h3>Family Knowledge Gaps</h3>
-          <p>In most Indian families, one person manages all finances. If they're unavailable, the family is left helpless — not knowing what exists, where it is, or what to do.</p>
-        </div>
-        <div class="problem-card reveal delay-2">
-          <div class="problem-icon">🏢</div>
-          <h3>Business Asset Chaos</h3>
-          <p>Small and mid-size businesses lose track of IT assets, licenses, and warranties. Spreadsheets break down. Things expire unnoticed. Money gets wasted.</p>
-        </div>
-        <div class="problem-card reveal delay-3">
-          <div class="problem-icon">💡</div>
-          <h3>Our Approach</h3>
-          <p>We don't build solutions looking for problems. We start with pain points we've lived ourselves, then build the simplest tool that actually solves them.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Products -->
-  <section id="products" class="products">
-    <div class="products-inner">
-      <div class="section-header reveal">
-        <div class="section-label">
-          <span class="section-label-dot"></span>
-          Our Products
-        </div>
-        <h2>Purpose-built tools, each<br>solving one problem really well</h2>
-      </div>
-      <div class="products-grid">
-        <!-- Virasat -->
-        <div class="product-card-wrap reveal delay-1">
-          <a href="/virasat" class="product-card" data-tilt>
-            <div class="product-card-inner">
-              <div class="product-header">
-                <div class="product-logo product-logo-virasat">
-                  <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                  </svg>
-                </div>
-                <div>
-                  <div class="product-name">Virasat</div>
-                  <div class="product-subtitle">Family Financial Safety Net</div>
-                </div>
-              </div>
-              <p>A secure vault for your family's financial knowledge. Store details of bank accounts, investments, insurance, property — and ensure your loved ones can access it when they need to.</p>
-              <div class="product-tags">
-                <span class="tag tag-indigo">Secure Vault</span>
-                <span class="tag tag-indigo">Trusted Nominees</span>
-                <span class="tag tag-indigo">Safety Net</span>
-                <span class="tag tag-indigo">Smart Alerts</span>
-              </div>
-              <div style="display:flex;align-items:center;justify-content:space-between">
-                <div class="product-status status-live">
-                  <span class="status-dot-live"></span>
-                  Live
-                </div>
-                <span class="product-link">
-                  Learn more
-                  <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
-                </span>
-              </div>
-            </div>
-          </a>
-        </div>
-
-        <!-- Inventra -->
-        <div class="product-card-wrap reveal delay-2">
-          <div class="product-card" data-tilt>
-            <div class="product-card-inner">
-              <div class="product-header">
-                <div class="product-logo product-logo-inventra">
-                  <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-                  </svg>
-                </div>
-                <div>
-                  <div class="product-name">Inventra</div>
-                  <div class="product-subtitle">IT Asset Management</div>
-                </div>
-              </div>
-              <p>Track every IT asset across your organization — hardware, software, licenses, warranties. Know what you own, where it is, who's using it, and when it expires.</p>
-              <div class="product-tags">
-                <span class="tag tag-emerald">Asset Tracking</span>
-                <span class="tag tag-emerald">License Management</span>
-                <span class="tag tag-emerald">Expiry Alerts</span>
-                <span class="tag tag-emerald">Reports</span>
-              </div>
-              <div class="product-status status-soon">
-                <span class="status-dot-soon"></span>
-                Coming Soon
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- How We Build — Timeline -->
-  <section id="about" class="timeline-section">
-    <div class="timeline-inner">
-      <div class="section-header reveal">
-        <div class="section-label">
-          <span class="section-label-dot"></span>
-          About SolveNow
-        </div>
-        <h2>How we build things</h2>
-        <p>We started SolveNow because we kept seeing real, everyday problems that technology should have solved by now — but hasn't.</p>
-      </div>
-
-      <div class="timeline" id="timeline">
-        <div class="timeline-line-fill" id="timelineFill"></div>
-
-        <div class="timeline-step reveal" data-step="1">
-          <div class="timeline-num">1</div>
-          <h3>Start with a real problem</h3>
-          <p>Not a technology, not a trend — a genuine pain point we've experienced ourselves. A family scrambling after a crisis. A business losing thousands to expired licenses.</p>
-        </div>
-
-        <div class="timeline-step reveal" data-step="2">
-          <div class="timeline-num">2</div>
-          <h3>Build the simplest solution</h3>
-          <p>No bloat, no unnecessary features. We build the minimum viable tool that actually solves the problem. If it needs three buttons instead of thirty, that's what we ship.</p>
-        </div>
-
-        <div class="timeline-step reveal" data-step="3">
-          <div class="timeline-num">3</div>
-          <h3>Make it accessible</h3>
-          <p>Free tiers, mobile-first, works on any device. We believe essential tools shouldn't be locked behind expensive subscriptions or complex setups.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="cta">
-    <div class="cta-particles" id="particles"></div>
-    <div class="cta-inner reveal">
-      <h2>Ready to get started?</h2>
-      <p>Virasat is live and free to use. Protect your family's financial future today.</p>
-      <div class="cta-buttons">
-        <a href="https://virasat.solvenow.in/register" class="btn-cta-primary">Create Free Account</a>
-        <a href="/virasat" class="btn-cta-ghost">Learn About Virasat</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="footer-inner reveal">
-      <div class="footer-grid">
+  <!-- THE WEBSITE CONTENT (Unlocked after reveal) -->
+  <main id="main-content">
+    
+    <!-- Section 1: About Continuity Labs -->
+    <section id="about">
+      <div class="content-grid">
         <div>
-          <div class="footer-brand">
-            <div class="logo-icon">S</div>
-            <span>SolveNow</span>
-          </div>
-          <p>Practical digital tools that solve everyday problems for Indian families and businesses.</p>
+          <h2>The ₹1.84 Lakh Crore <span class="gold-text">Crisis.</span></h2>
+          <p class="lead">Every year, billions vanish. Bank accounts, insurance policies, and forgotten provident funds end up absorbed by the state because families simply didn't know they existed. In the event of a crisis, one missing piece of paper can destroy a lifetime of hard work.</p>
+          <p class="lead" style="font-size: 1.1rem; opacity: 0.8;">At Continuity Labs, we believe that preserving wealth isn't just about accumulation—it's about transition. We build uncompromising digital safety nets that protect, organize, and transfer your financial knowledge silently and securely.</p>
         </div>
         <div>
-          <h4>Products</h4>
-          <ul>
-            <li><a href="/virasat">Virasat — Family Financial Vault</a></li>
-            <li><span style="color: var(--slate-600)">Inventra — IT Asset Management (soon)</span></li>
-          </ul>
+           <!-- If image unavailable, fallback to pure CSS glass card -->
+           <img src="./assets/continuity_vault.png" alt="Digital Vault Concept" class="img-fluid" onerror="this.style.display='none'">
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Products - WeKram -->
+    <section id="products">
+      <div class="content-grid reverse">
+        <div>
+           <img src="./assets/wekram_mockup.png" alt="WeKram Application on Device" class="img-fluid" onerror="this.style.display='none'">
         </div>
         <div>
-          <h4>Connect</h4>
-          <ul>
-            <li><a href="mailto:hello@solvenow.in">hello@solvenow.in</a></li>
-            <li><a href="https://github.com/Solvenow20206">GitHub</a></li>
-          </ul>
+          <div style="text-transform: uppercase; letter-spacing: 0.2em; color: var(--gold-primary); font-size: 0.9rem; font-weight: 600; margin-bottom: 10px;">Flagship Product</div>
+          <h2>The <span class="gold-text">WeKram</span> Vault.</h2>
+          <p class="lead">More than cloud storage. WeKram is an intelligent, compartmentalized digital swiss bank designed explicitly to protect your family's future, built right here in India.</p>
+          <a href="https://virasat.solvenow.in/register" class="btn-gold" style="pointer-events: auto;">Start Your Vault Free</a>
         </div>
       </div>
-      <div class="footer-bottom">
-        <span>&copy; 2026 SolveNow. All rights reserved.</span>
-        <span>Built with <span class="footer-heart">&hearts;</span> in India</span>
-      </div>
-    </div>
-  </footer>
+    </section>
 
+    <!-- Section 3: Engineering Features -->
+    <section id="security" style="display: block;">
+      <div style="text-align: center; max-width: 800px; margin: 0 auto 60px;">
+        <h2>Engineered for <span class="gold-text">Absolute Trust.</span></h2>
+        <p class="lead">We combine bank-grade security with proprietary machine-learning architecture to take the friction out of legacy planning.</p>
+      </div>
+      
+      <div class="features-grid" style="max-width: 1400px; margin: 0 auto;">
+        <div class="feature-card">
+          <h3>Gemini SmartScan</h3>
+          <p>Our dual-pass AI architecture automatically classifies, extracts, and securely labels your documents with 99% precision. Ditch the manual data entry.</p>
+        </div>
+        <div class="feature-card">
+          <h3>WhatsApp Cloud Sync</h3>
+          <p>Got a policy document on WhatsApp? Forward it directly to the encrypted WeKram bot. It is instantly classified and filed into your secure vault.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Granular Nominee Trust</h3>
+          <p>Compartmentalize your legacy. Grant your spouse access to all investments, while strictly limiting your accountant to specific tax drawers.</p>
+        </div>
+        <div class="feature-card">
+          <h3>ActionGuides™ Automation</h3>
+          <p>Upon crisis, WeKram doesn't just hand over raw files. We provide your loved ones with step-by-step bureaucratic resolution protocols to claim their assets seamlessly.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div style="margin-bottom: 20px; font-weight: 500; letter-spacing: 0.2em; font-size: 1.1rem; color: var(--gold-primary);">CONTINUITY LABS LLP</div>
+      <p style="font-size: 0.85rem; max-width: 500px; margin: 0 auto 20px; display: inline-block; padding-bottom: 20px;">Built in India. Protecting legacies worldwide.</p>
+      <br>
+      © 2026 Continuity Labs LLP. All rights reserved.
+    </footer>
+  </main>
+
+  <!-- ═══════════════════════════════════════
+       INTERACTIVE CANVAS & LOGIC
+  ═══════════════════════════════════════ -->
   <script>
-    // ═══════════════════════════════════════
-    // NAVBAR — Show on scroll
-    // ═══════════════════════════════════════
-    const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 50);
-    });
-
-    // ═══════════════════════════════════════
-    // HERO — Text cycling animation
-    // ═══════════════════════════════════════
-    const cycleWords = ['real problems', 'your family', 'your business', 'everyday life', 'real problems'];
-    let cycleIndex = 0;
-    const cycleEl = document.getElementById('cycleText');
-
-    setInterval(() => {
-      cycleIndex = (cycleIndex + 1) % cycleWords.length;
-      cycleEl.style.animation = 'none';
-      cycleEl.offsetHeight; // trigger reflow
-      cycleEl.textContent = cycleWords[cycleIndex];
-      cycleEl.style.animation = 'cycleSlideIn 0.5s ease forwards';
-    }, 2800);
-
-    // ═══════════════════════════════════════
-    // SCROLL REVEAL — IntersectionObserver
-    // ═══════════════════════════════════════
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-
-    document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => {
-      revealObserver.observe(el);
-    });
-
-    // ═══════════════════════════════════════
-    // ANIMATED COUNTERS
-    // ═══════════════════════════════════════
-    const counterObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const el = entry.target;
-          const target = parseInt(el.dataset.target);
-          const suffix = el.dataset.suffix || '';
-          const prefix = el.dataset.prefix || '';
-          const text = el.dataset.text;
-
-          if (text) { el.textContent = text; return; }
-          if (target === 0) return;
-
-          let current = 0;
-          const duration = 1500;
-          const step = target / (duration / 16);
-          const animate = () => {
-            current += step;
-            if (current >= target) {
-              el.textContent = prefix + target + suffix;
-              return;
-            }
-            el.textContent = prefix + Math.floor(current) + suffix;
-            requestAnimationFrame(animate);
-          };
-          animate();
-          counterObserver.unobserve(el);
-        }
-      });
-    }, { threshold: 0.5 });
-
-    document.querySelectorAll('.impact-number').forEach(el => counterObserver.observe(el));
-
-    // ═══════════════════════════════════════
-    // 3D TILT — Product cards
-    // ═══════════════════════════════════════
-    document.querySelectorAll('[data-tilt]').forEach(card => {
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const rotateX = (y - centerY) / centerY * -6;
-        const rotateY = (x - centerX) / centerX * 6;
-        card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
-      });
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) scale(1)';
-      });
-    });
-
-    // ═══════════════════════════════════════
-    // TIMELINE — Animated line fill
-    // ═══════════════════════════════════════
-    const timeline = document.getElementById('timeline');
-    const timelineFill = document.getElementById('timelineFill');
-    const timelineSteps = document.querySelectorAll('.timeline-step');
-
-    const timelineObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-          // Calculate fill height based on active steps
-          const stepIndex = parseInt(entry.target.dataset.step);
-          const totalSteps = timelineSteps.length;
-          const fillPercent = (stepIndex / totalSteps) * 100;
-          timelineFill.style.height = fillPercent + '%';
-        }
-      });
-    }, { threshold: 0.5 });
-
-    timelineSteps.forEach(step => timelineObserver.observe(step));
-
-    // ═══════════════════════════════════════
-    // CTA — Floating particles
-    // ═══════════════════════════════════════
-    const particlesContainer = document.getElementById('particles');
-    for (let i = 0; i < 30; i++) {
-      const p = document.createElement('div');
-      p.className = 'particle';
-      p.style.left = Math.random() * 100 + '%';
-      p.style.width = p.style.height = (Math.random() * 4 + 2) + 'px';
-      p.style.animationDuration = (Math.random() * 8 + 6) + 's';
-      p.style.animationDelay = (Math.random() * 10) + 's';
-      particlesContainer.appendChild(p);
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx;
+    function initAudio() {
+      if (!audioCtx) audioCtx = new AudioContext();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
     }
-  </script>
 
+    let lastChimeTime = 0;
+    function playConnectionChime(intensity) {
+      if (!audioCtx) return;
+      const now = audioCtx.currentTime;
+      if (now - lastChimeTime < 0.1) return; 
+      lastChimeTime = now;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(400 + (intensity * 200), now);
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(0.05 + (intensity * 0.05), now + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(now); osc.stop(now + 1.5);
+    }
+
+    function playRevealHum() {
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(50, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0, audioCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 1);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 4);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(audioCtx.currentTime); osc.stop(audioCtx.currentTime + 4);
+    }
+
+    const canvas = document.getElementById('constellation-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+    let mouse = { x: null, y: null, radius: 150 };
+    
+    // State Flags
+    let isRevealed = false;
+    let isAmbientMode = false;
+    let totalConnectionDensity = 0;
+
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      initAudio();
+    });
+    window.addEventListener('touchmove', (e) => {
+      mouse.x = e.touches[0].clientX;
+      mouse.y = e.touches[0].clientY;
+      initAudio();
+    }, {passive: true});
+    window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.baseX = this.x;
+        this.baseY = this.y;
+        this.size = Math.random() * 2 + 1;
+        this.density = (Math.random() * 30) + 1;
+        this.angle = Math.random() * 360;
+        this.velocity = Math.random() * 0.5;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(217, 160, 40, 0.8)';
+        ctx.fill();
+      }
+      update() {
+        this.baseX += Math.cos(this.angle) * this.velocity;
+        this.baseY += Math.sin(this.angle) * this.velocity;
+        if (this.baseX < 0 || this.baseX > width) this.angle = Math.PI - this.angle;
+        if (this.baseY < 0 || this.baseY > height) this.angle = -this.angle;
+
+        // Interactive Pull (Disabled in ambient mode for smooth scrolling)
+        if (mouse.x != null && !isAmbientMode) {
+          let dx = mouse.x - this.x;
+          let dy = mouse.y - this.y;
+          let distance = Math.sqrt(dx*dx + dy*dy);
+          if (distance < mouse.radius) {
+            let force = (mouse.radius - distance) / mouse.radius;
+            this.x += (dx / distance) * force * this.density * 0.2;
+            this.y += (dy / distance) * force * this.density * 0.2;
+          } else {
+            this.x += (this.baseX - this.x) * 0.1;
+            this.y += (this.baseY - this.y) * 0.1;
+          }
+        } else {
+           this.x += (this.baseX - this.x) * 0.05;
+           this.y += (this.baseY - this.y) * 0.05;
+        }
+        this.draw();
+      }
+    }
+
+    function initParticles() {
+      particles = [];
+      let numberOfParticles = (width * height) / 9000; 
+      for (let i = 0; i < numberOfParticles; i++) particles.push(new Particle());
+    }
+
+    function connectParticles() {
+      let currentConnections = 0;
+      for (let a = 0; a < particles.length; a++) {
+        for (let b = a; b < particles.length; b++) {
+          let distance = Math.pow(particles[a].x - particles[b].x, 2) + Math.pow(particles[a].y - particles[b].y, 2);
+          if (distance < (width/10) * (height/10)) {
+            let opacityValue = 1 - (distance / 20000);
+            if(opacityValue > 0) {
+                ctx.strokeStyle = `rgba(217, 160, 40, ${opacityValue * (isAmbientMode ? 0.2 : 0.6)})`;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(particles[a].x, particles[a].y);
+                ctx.lineTo(particles[b].x, particles[b].y);
+                ctx.stroke();
+                
+                if (mouse.x != null && !isAmbientMode) {
+                   let mouseDist = Math.sqrt(Math.pow(mouse.x - particles[a].x, 2) + Math.pow(mouse.y - particles[a].y, 2));
+                   if (mouseDist < mouse.radius) currentConnections++;
+                }
+            }
+          }
+        }
+      }
+
+      if (!isRevealed && currentConnections > 150) {
+        totalConnectionDensity++;
+        if (totalConnectionDensity > 50) triggerReveal();
+        else if (totalConnectionDensity % 10 === 0) playConnectionChime((totalConnectionDensity / 50));
+      } else if (!isRevealed && currentConnections < 50 && totalConnectionDensity > 0) {
+        totalConnectionDensity -= 0.5;
+      }
+    }
+
+    function triggerReveal() {
+      isRevealed = true;
+      playRevealHum();
+      
+      // Sequence 1: Fade out Intro
+      document.getElementById('intro-text').style.opacity = '0';
+      document.getElementById('intro-text').style.transform = 'translateY(-20px)';
+      document.getElementById('instruction-text').style.display = 'none';
+      mouse.radius = 1200; // Final dramatic pull
+      
+      // Sequence 2: Bring in Continuity Labs UI and enable scroll
+      setTimeout(() => {
+         document.getElementById('reveal-ui').classList.add('active');
+         document.getElementById('main-nav').classList.add('active');
+         document.getElementById('main-content').classList.add('unlocked');
+         document.getElementById('scroll-arrow').classList.add('active');
+         
+         // Turn canvas into ambient background and unlock body scroll
+         document.body.style.overflow = 'auto';
+         canvas.classList.add('ambient-mode');
+         isAmbientMode = true;
+      }, 1500);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      for (let i = 0; i < particles.length; i++) particles[i].update();
+      connectParticles();
+    }
+
+    initParticles();
+    animate();
+
+  </script>
 </body>
 </html>
