@@ -8,6 +8,10 @@ Company landing page for SolveNow (`solvenow.in`). Static HTML with animated UI 
   No WeKram, no Virasat, no company name, no links — see the comment in the file.
   From 29 Aug to 25 Sep the whole site redirected to wekram.in; `virasat.html`
   and the old Continuity Labs homepage were removed on 29 Aug and must not return.
+- `_redirects` — sends `/CLAUDE.md` and `/.gitignore` to the home page. Cloudflare
+  Pages publishes EVERY file in this repo, so this file was readable by anyone at
+  solvenow.in/CLAUDE.md until 25 Sep 2026. Nothing in `index.html` may carry a
+  comment naming another brand or company: page source is public too.
 
 ## Design & Animations
 Both pages use a consistent animated design system (all vanilla CSS + JS, no libraries):
