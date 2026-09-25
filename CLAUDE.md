@@ -4,8 +4,10 @@
 Company landing page for SolveNow (`solvenow.in`). Static HTML with animated UI — no backend, no build step.
 
 ## Pages
-- `index.html` — Company homepage (solvenow.in)
-- `virasat.html` — Virasat product page (solvenow.in/virasat)
+- `index.html` — a plain "SolveNow · Coming soon" holding page (since 25 Sep 2026).
+  No WeKram, no Virasat, no company name, no links — see the comment in the file.
+  From 29 Aug to 25 Sep the whole site redirected to wekram.in; `virasat.html`
+  and the old Continuity Labs homepage were removed on 29 Aug and must not return.
 
 ## Design & Animations
 Both pages use a consistent animated design system (all vanilla CSS + JS, no libraries):

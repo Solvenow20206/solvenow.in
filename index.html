@@ -1,21 +1,40 @@
 <!DOCTYPE html>
 <!--
-  solvenow.in is retired as a customer-facing brand (2026-08-29).
+  solvenow.in holding page (25 Sep 2026).
 
-  _redirects handles this at the edge; this file is the fallback for any host
-  that does not read it, so the page can never fall back to the old Continuity
-  Labs / Virasat content.
+  Until today this page redirected to wekram.in. Jigs asked for solvenow.in to
+  stand on its own again, as "coming soon" until he decides what it is for.
+
+  Deliberately says NOTHING else: no WeKram, no Virasat, no company name, no
+  links. The old page named Continuity Labs LLP and marketed Virasat, and a
+  second identity on the internet is what Meta and Razorpay reviewers check
+  WeKram (NIVESHLIFE PRIVATE LIMITED) against. Anything added here later is a
+  Jigs decision.
 -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="refresh" content="0; url=https://wekram.in">
-<link rel="canonical" href="https://wekram.in">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>WeKram</title>
+<title>SolveNow</title>
+<style>
+  :root { --bg: #f8fafc; --ink: #0f172a; --soft: #64748b; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #0f172a; --ink: #f8fafc; --soft: #94a3b8; } }
+  html, body { height: 100%; margin: 0; }
+  body {
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg); color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    text-align: center; padding: 0 16px;
+  }
+  h1 { font-size: clamp(2rem, 8vw, 3.5rem); font-weight: 800; margin: 0 0 .5rem; letter-spacing: -.02em; }
+  p  { font-size: 1.125rem; color: var(--soft); margin: 0; }
+</style>
 </head>
 <body>
-<p>This site has moved to <a href="https://wekram.in">wekram.in</a>.</p>
-<script>location.replace('https://wekram.in')</script>
+<main>
+  <h1>SolveNow</h1>
+  <p>Coming soon.</p>
+</main>
 </body>
 </html>
